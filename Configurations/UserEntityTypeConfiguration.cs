@@ -1,4 +1,4 @@
-﻿using back_end.Entities;
+﻿using back_end.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -9,7 +9,7 @@ namespace back_end.Configurations
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder
-                .HasKey(x => x.UserId);
+                .HasKey(x => x.Id);
 
             builder.Property(x => x.FullNameEn)
                 .IsRequired()

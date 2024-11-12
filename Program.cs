@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Text;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
+using back_end.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +29,11 @@ builder.Services.AddCors();
 // Add Custom Services
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
+builder.Services.AddScoped<IAttMachineService, AttMachineService>();
+builder.Services.AddScoped(typeof(IRepository<>),typeof(Repository<>));
+builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<AccountRepository>();
+builder.Services.AddScoped<AttendanceRepository>();
 
 // Add authentication
 builder.Services.AddAuthentication(options =>

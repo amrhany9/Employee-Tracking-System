@@ -1,5 +1,5 @@
 ﻿using back_end.Data;
-using back_end.Entities;
+using back_end.Models;
 using back_end.Interfaces;
 using System.Linq;
 using zkemkeeper;
@@ -47,9 +47,9 @@ namespace back_end.Services
             }
         }
 
-        public List<UserAttendanceRecord> GetDailyAttendanceRecords()
+        public List<Attendance> GetDailyAttendanceRecords()
         {
-            List<UserAttendanceRecord> logs = new List<UserAttendanceRecord>();
+            List<Attendance> logs = new List<Attendance>();
 
             DateTime today = DateTime.Now;
 
@@ -76,11 +76,11 @@ namespace back_end.Services
                 {
                     if (yearValue == today.Year && monthValue == today.Month && day == today.Day)
                     {
-                        var userAccount = _context.UsersAccounts.FirstOrDefault(x => x.UserId == enrollNumber);
+                        var userAccount = _context.Accounts.FirstOrDefault(x => x.UserId == enrollNumber);
 
                         if (userAccount != null)
                         {
-                            UserAttendanceRecord userAttendanceRecord = new UserAttendanceRecord
+                            Attendance userAttendance = new Attendance
                             {
                                 UserId = enrollNumber,
                                 VerifyMode = verifyMode,
@@ -88,7 +88,7 @@ namespace back_end.Services
                                 CheckDate = new DateTime(yearValue, monthValue, day, hour, minute, 0),
                             };
 
-                            logs.Add(userAttendanceRecord);
+                            logs.Add(userAttendance);
                         }
                     }
                 }

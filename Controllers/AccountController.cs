@@ -1,6 +1,6 @@
 ﻿using back_end.Data;
 using back_end.DTOs;
-using back_end.Entities;
+using back_end.Models;
 using back_end.Interfaces;
 using back_end.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -26,7 +26,7 @@ namespace back_end.Controllers
         [HttpPost("log-in")] // POST : api/account/login
         public ActionResult<string> Login(LoginDTO loginDTO)
         {
-            var userAccount = _context.UsersAccounts.SingleOrDefault(x => x.UserName == loginDTO.UserName);
+            var userAccount = _context.Accounts.SingleOrDefault(x => x.UserName == loginDTO.UserName);
 
             if (userAccount == null)
             {
@@ -57,7 +57,7 @@ namespace back_end.Controllers
                 return Unauthorized("User ID could not be found.");
             }
 
-            var userAccount = _context.UsersAccounts.SingleOrDefault(x => x.UserId == int.Parse(userId));
+            var userAccount = _context.Accounts.SingleOrDefault(x => x.UserId == int.Parse(userId));
 
             if (userAccount == null)
             {
@@ -83,19 +83,19 @@ namespace back_end.Controllers
                 return Unauthorized("Current user is not authenticated.");
             }
 
-            var adminUser = _context.UsersAccounts.FirstOrDefault(u => u.UserId == int.Parse(currentAdminUserId));
+            var adminUser = _context.Accounts.FirstOrDefault(u => u.UserId == int.Parse(currentAdminUserId));
 
             if (adminUser == null || adminUser.Role != "Admin")
             {
                 return Forbid("Only admins can register new users.");
             }
 
-            if (_context.UsersAccounts.Any(u => u.UserName == registerDTO.UserName))
+            if (_context.Accounts.Any(u => u.UserName == registerDTO.UserName))
             {
                 return BadRequest("Username is already taken.");
             }
 
-            var userAccount = new UserAccount
+            var userAccount = new Account
             {
                 UserId = registerDTO.UserId,
                 UserName = registerDTO.UserName,
@@ -103,7 +103,7 @@ namespace back_end.Controllers
                 Role = registerDTO.Role
             };
 
-            _context.UsersAccounts.Add(userAccount);
+            _context.Accounts.Add(userAccount);
             _context.SaveChanges();
 
             return Ok("User Account Created Succesfully.");

@@ -1,9 +1,9 @@
-﻿using back_end.Entities;
+﻿using back_end.Models;
 
 namespace back_end.Interfaces
 {
     public interface IAttMachineService
     {
-        public List<UserAttendanceRecord> GetDailyAttendanceRecords();
+        public List<Attendance> GetDailyAttendanceRecords();
     }
 }

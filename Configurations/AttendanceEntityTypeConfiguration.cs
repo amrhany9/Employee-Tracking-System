@@ -1,17 +1,17 @@
-﻿using back_end.Entities;
+﻿using back_end.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace back_end.Configurations
 {
-    public class UserAttendanceRecordEntityTypeConfiguration : IEntityTypeConfiguration<UserAttendanceRecord>
+    public class AttendanceEntityTypeConfiguration : IEntityTypeConfiguration<Attendance>
     {
-        public void Configure(EntityTypeBuilder<UserAttendanceRecord> builder)
+        public void Configure(EntityTypeBuilder<Attendance> builder)
         {
-            builder.HasKey(ar => ar.AttendanceId);
+            builder.HasKey(ar => ar.Id);
 
             builder.HasOne(ar => ar.User)
-                  .WithMany(u => u.AttendanceRecords)
+                  .WithMany(u => u.UserAttendances)
                   .HasForeignKey(ar => ar.UserId);
 
             builder.Property(ar => ar.CheckType)

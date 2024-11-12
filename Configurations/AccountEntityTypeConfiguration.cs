@@ -1,20 +1,20 @@
-﻿using back_end.Entities;
+﻿using back_end.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace back_end.Configurations
 {
-    public class UserAccountEntityTypeConfiguration : IEntityTypeConfiguration<UserAccount>
+    public class AccountEntityTypeConfiguration : IEntityTypeConfiguration<Account>
     {
-        public void Configure(EntityTypeBuilder<UserAccount> builder)
+        public void Configure(EntityTypeBuilder<Account> builder)
         {
             builder
-                .HasKey(x => x.UserAccountId);
+                .HasKey(x => x.Id);
 
             builder
                 .HasOne(u => u.User)
                 .WithOne(ua => ua.UserAccount)
-                .HasForeignKey<UserAccount>(u => u.UserId)
+                .HasForeignKey<Account>(u => u.UserId)
                 .IsRequired(false);
 
             builder.Property(x => x.UserName)

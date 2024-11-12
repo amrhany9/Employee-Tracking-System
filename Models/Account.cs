@@ -1,11 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace back_end.Entities
+namespace back_end.Models
 {
-    public class UserAccount
+    public class Account : BaseModel
     {
-        public int UserAccountId { get; set; }
         public int? UserId { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }

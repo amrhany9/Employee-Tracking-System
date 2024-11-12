@@ -1,5 +1,5 @@
 ﻿using back_end.Configurations;
-using back_end.Entities;
+using back_end.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace back_end.Data
@@ -13,12 +13,12 @@ namespace back_end.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             new UserEntityTypeConfiguration().Configure(modelBuilder.Entity<User>());
-            new UserAccountEntityTypeConfiguration().Configure(modelBuilder.Entity<UserAccount>());
-            new UserAttendanceRecordEntityTypeConfiguration().Configure(modelBuilder.Entity<UserAttendanceRecord>());
+            new AccountEntityTypeConfiguration().Configure(modelBuilder.Entity<Account>());
+            new AttendanceEntityTypeConfiguration().Configure(modelBuilder.Entity<Attendance>());
         }
 
         public DbSet<User> Users { get; set; }
-        public DbSet<UserAccount> UsersAccounts { get; set; }
-        public DbSet<UserAttendanceRecord> UsersAttendanceRecords { get; set; }
+        public DbSet<Account> Accounts { get; set; }
+        public DbSet<Attendance> Attendances { get; set; }
     }
 }

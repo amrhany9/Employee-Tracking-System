@@ -1,4 +1,4 @@
-﻿using back_end.Entities;
+﻿using back_end.Models;
 using back_end.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -16,7 +16,7 @@ namespace back_end.Services
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
         }
 
-        public string GenerateToken(UserAccount userAccount)
+        public string GenerateToken(Account userAccount)
         {
             var claims = new List<Claim>()
             {
