@@ -1,6 +1,5 @@
 ﻿using back_end.Data;
 using back_end.Models;
-using back_end.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -33,6 +32,11 @@ namespace back_end.Repositories
         public void Add(T entity)
         {
             _context.Set<T>().Add(entity);
+        }
+
+        public void AddRange(IEnumerable<T> entities)
+        {
+            _context.Set<T>().AddRange(entities);
         }
 
         public void Delete(T entity)

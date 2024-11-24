@@ -10,7 +10,7 @@ namespace back_end.Models
         public string Phone { get; set; }
         public string UserPhotoPath { get; set; }
 
-        public virtual Account UserAccount { get; set; }
-        public virtual ICollection<Attendance> UserAttendances { get; set; } = new HashSet<Attendance>();
+        public Account UserAccount { get; set; }
+        public ICollection<Attendance> UserAttendances { get; set; }
     }
 }

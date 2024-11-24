@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace back_end.Interfaces
+namespace back_end.Repositories
 {
     public interface IRepository<T>
     {
@@ -8,6 +8,7 @@ namespace back_end.Interfaces
         IQueryable<T> GetById(int id);
         IQueryable<T> GetByFilter(Expression<Func<T, bool>> filter);
         void Add(T entity);
+        void AddRange(IEnumerable<T> entities);
         void Update(T entity);
         void Delete(T entity);
         void HardDelete(T entity);

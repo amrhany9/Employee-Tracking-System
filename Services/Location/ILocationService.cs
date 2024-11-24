@@ -1,4 +1,4 @@
-﻿namespace back_end.Interfaces
+﻿namespace back_end.Services.Location
 {
     public interface ILocationService
     {

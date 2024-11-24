@@ -1,8 +1,7 @@
 ﻿using back_end.Data;
 using back_end.DTOs;
 using back_end.Models;
-using back_end.Interfaces;
-using back_end.Services;
+using back_end.Services.Token;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,12 +13,10 @@ namespace back_end.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
-        private readonly ITokenService _tokenService;
+        private ITokenService _tokenService;
 
-        public AccountController(ApplicationDbContext context, ITokenService tokenService)
+        public AccountController(ITokenService tokenService)
         {
-            _context = context;
             _tokenService = tokenService;
         }
 
@@ -70,43 +67,6 @@ namespace back_end.Controllers
             }
 
             return Ok();
-        }
-
-        [HttpPost("register")] // POST : api/account/register
-        [Authorize(Roles = "Admin")]
-        public ActionResult<string> Register(RegisterDTO registerDTO)
-        {
-            var currentAdminUserId = User.Claims.FirstOrDefault(c => c.Type == "userId").Value;
-
-            if (currentAdminUserId == null)
-            {
-                return Unauthorized("Current user is not authenticated.");
-            }
-
-            var adminUser = _context.Accounts.FirstOrDefault(u => u.UserId == int.Parse(currentAdminUserId));
-
-            if (adminUser == null || adminUser.Role != "Admin")
-            {
-                return Forbid("Only admins can register new users.");
-            }
-
-            if (_context.Accounts.Any(u => u.UserName == registerDTO.UserName))
-            {
-                return BadRequest("Username is already taken.");
-            }
-
-            var userAccount = new Account
-            {
-                UserId = registerDTO.UserId,
-                UserName = registerDTO.UserName,
-                Password = registerDTO.Password,
-                Role = registerDTO.Role
-            };
-
-            _context.Accounts.Add(userAccount);
-            _context.SaveChanges();
-
-            return Ok("User Account Created Succesfully.");
         }
     }
 }

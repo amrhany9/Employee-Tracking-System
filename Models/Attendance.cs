@@ -10,6 +10,6 @@ namespace back_end.Models
         public int CheckType { get; set; } // 0: "CheckIn" or 1: "CheckOut"
         public DateTime CheckDate { get; set; }
 
-        public virtual User User { get; set; }
+        public User User { get; set; }
     } 
 }

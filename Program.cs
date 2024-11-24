@@ -1,6 +1,4 @@
 using back_end.Data;
-using back_end.Interfaces;
-using back_end.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +6,9 @@ using System.Text;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
 using back_end.Repositories;
+using back_end.Services.Token;
+using back_end.Services.Location;
+using back_end.Services.ZKEM_Machine;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,11 +30,11 @@ builder.Services.AddCors();
 // Add Custom Services
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
-builder.Services.AddScoped<IAttMachineService, AttMachineService>();
+builder.Services.AddSingleton<IMachineService, MachineService>();
 builder.Services.AddScoped(typeof(IRepository<>),typeof(Repository<>));
-builder.Services.AddScoped<UserRepository>();
-builder.Services.AddScoped<AccountRepository>();
-builder.Services.AddScoped<AttendanceRepository>();
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<AccountService>();
+builder.Services.AddScoped<AttendanceService>();
 
 // Add authentication
 builder.Services.AddAuthentication(options =>

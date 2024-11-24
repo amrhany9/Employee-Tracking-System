@@ -1,5 +1,6 @@
 ﻿using back_end.Data;
-using back_end.Models;    
+using back_end.Models;
+using back_end.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,26 +12,26 @@ namespace back_end.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private UserService _userService;
 
-        public UserController(ApplicationDbContext context)
+        public UserController(UserService userService)
         {
-            _context = context;
+            _userService = userService;
         }
 
         [HttpGet] // GET : api/users
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public ActionResult<IEnumerable<User>> GetUsers()
         {
-            var users = await _context.Users.ToListAsync();
+            var users = _userService.GetAllUsers();
 
             return Ok(users);
         }
 
         [HttpGet("{id}")] // GET : api/users/1
-        public async Task<ActionResult<User>> GetUser(int id)
+        public ActionResult<User> GetUser(int id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = _userService.GetUser(id);
 
             return Ok(user);
         }

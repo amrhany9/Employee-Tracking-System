@@ -1,11 +1,10 @@
 ﻿using back_end.Models;
-using back_end.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace back_end.Services
+namespace back_end.Services.Token
 {
     public class TokenService : ITokenService
     {

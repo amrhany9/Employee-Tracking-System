@@ -1,6 +1,4 @@
-﻿using back_end.Interfaces;
-
-namespace back_end.Services
+﻿namespace back_end.Services.Location
 {
     public class LocationService : ILocationService
     {
@@ -14,8 +12,8 @@ namespace back_end.Services
             this.companyLongitude = companyLongitude;
         }
 
-        public void SetAllowedRadius(double allowedRadius) 
-        { 
+        public void SetAllowedRadius(double allowedRadius)
+        {
             this.allowedRadius = allowedRadius;
         }
 
@@ -28,10 +26,10 @@ namespace back_end.Services
         private double CalculateDistance(double UserLatitude, double UserLongitude)
         {
             var R = 6371000; // Radius of the Earth in meters
-            var latRad1 = this.companyLatitude * Math.PI / 180;
+            var latRad1 = companyLatitude * Math.PI / 180;
             var latRad2 = UserLatitude * Math.PI / 180;
-            var deltaLat = (UserLatitude - this.companyLatitude) * Math.PI / 180;
-            var deltaLon = (UserLongitude - this.companyLongitude) * Math.PI / 180;
+            var deltaLat = (UserLatitude - companyLatitude) * Math.PI / 180;
+            var deltaLon = (UserLongitude - companyLongitude) * Math.PI / 180;
 
             var a = Math.Sin(deltaLat / 2) * Math.Sin(deltaLat / 2) +
                     Math.Cos(latRad1) * Math.Cos(latRad2) *

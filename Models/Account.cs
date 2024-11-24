@@ -11,6 +11,6 @@ namespace back_end.Models
         public string Role { get; set; } // "Admin" or "Employee"
         public bool IsCheckedIn { get; set; }
 
-        public virtual User User { get; set; }
+        public User User { get; set; }
     }
 }

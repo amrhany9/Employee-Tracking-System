@@ -1,12 +1,14 @@
 ﻿using back_end.Data;
 using back_end.DTOs;
 using back_end.Models;
-using back_end.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using back_end.Services;
+using back_end.Services.Location;
+using back_end.Mediators.Attendance;
 
 namespace back_end.Controllers
 {
@@ -14,28 +16,26 @@ namespace back_end.Controllers
     [ApiController]
     public class AttendanceController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
-        private readonly ILocationService _locationService;
-        private readonly IAttMachineService _attMachineService;
+        private ILocationService _locationService;
+        private IAttendanceMediator _attendanceMediator;
 
-        public AttendanceController(ApplicationDbContext context, ILocationService locationService, IAttMachineService attMachineService)
+        public AttendanceController(ILocationService locationService, IAttendanceMediator attendanceMediator)
         {
-            _context = context;
             _locationService = locationService;
-            _attMachineService = attMachineService;
+            _attendanceMediator = attendanceMediator;
         }
 
         [HttpGet("attendance-log")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<List<Attendance>>> GetAttendanceLog()
+        public ActionResult<List<Attendance>> GetAttendanceLog()
         {
-            var attendanceLog = await _context.Attendances.ToListAsync();
+            var attendanceLog = _context.Attendances.ToList();
             return Ok(attendanceLog);
         }
 
         [HttpGet("user-attendance-log")]
         [Authorize]
-        public async Task<ActionResult<List<Attendance>>> GetUserAttendanceLog()
+        public ActionResult<List<Attendance>> GetUserAttendanceLog()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -44,16 +44,14 @@ namespace back_end.Controllers
                 return Unauthorized("User ID could not be found.");
             }
 
-            var userAttendanceLog = await _context.Attendances
-                .Where(r => r.UserId == int.Parse(userId))
-                .ToListAsync();
+            var userAttendanceLog = 
 
             return Ok(userAttendanceLog);
         }
 
         [HttpPost("check-in")]
         [Authorize]
-        public async Task<ActionResult<Attendance>> CheckIn(CheckInOutDTO checkInOutDTO)
+        public ActionResult<Attendance> CheckIn(CheckInOutDTO checkInOutDTO)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -62,7 +60,7 @@ namespace back_end.Controllers
                 return Unauthorized("User ID could not be found.");
             }
 
-            var userAccount = await _context.Accounts.FirstOrDefaultAsync(u => u.UserId == int.Parse(userId)); // Find user by ID
+            var userAccount = _context.Accounts.FirstOrDefault(u => u.UserId == int.Parse(userId)); // Find user by ID
 
             if (userAccount == null)
             {
@@ -92,7 +90,7 @@ namespace back_end.Controllers
             _context.Attendances.Add(userAttendance);
             userAccount.IsCheckedIn = true;
             _context.Accounts.Update(userAccount);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
 
             return Ok(userAttendance);
         }
@@ -109,7 +107,7 @@ namespace back_end.Controllers
                 return Unauthorized("User ID could not be found.");
             }
 
-            var userAccount = await _context.Accounts.FirstOrDefaultAsync(u => u.UserId == int.Parse(userId));
+            var userAccount = _context.Accounts.FirstOrDefault(u => u.UserId == int.Parse(userId));
 
             if (userAccount == null)
             {
