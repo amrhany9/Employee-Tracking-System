@@ -12,6 +12,7 @@ namespace back_end.Repositories
         public Repository(ApplicationDbContext context)
         {
             _context = context;
+            _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
         public IQueryable<T> GetAll()
@@ -31,16 +32,19 @@ namespace back_end.Repositories
 
         public void Add(T entity)
         {
+            _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
             _context.Set<T>().Add(entity);
         }
 
         public void AddRange(IEnumerable<T> entities)
         {
+            _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
             _context.Set<T>().AddRange(entities);
         }
 
         public void Delete(T entity)
         {
+            _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
             entity.IsDeleted = true;
             Update(entity);
         }
@@ -48,11 +52,6 @@ namespace back_end.Repositories
         public void HardDelete(T entity)
         {
             _context.Set<T>().Remove(entity);
-        }
-
-        public void HardDelete(int id)
-        {
-            _context.Set<T>().Where(x => x.Id == id).ExecuteDelete();
         }
 
         public void Update(T entity)

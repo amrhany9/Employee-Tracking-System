@@ -2,34 +2,34 @@
 {
     public class LocationService : ILocationService
     {
-        public double companyLatitude;
-        public double companyLongitude;
-        public double allowedRadius; // in meters
+        private double _companyLatitude;
+        private double _companyLongitude;
+        private double _allowedRadius; // in meters
 
         public void SetCompanyCoordinates(double companyLatitude, double companyLongitude)
         {
-            this.companyLatitude = companyLatitude;
-            this.companyLongitude = companyLongitude;
+            _companyLatitude = companyLatitude;
+            _companyLongitude = companyLongitude;
         }
 
         public void SetAllowedRadius(double allowedRadius)
         {
-            this.allowedRadius = allowedRadius;
+            _allowedRadius = allowedRadius;
         }
 
         public bool IsWithinCompanyArea(double UserLatitude, double UserLongitude)
         {
             var distance = CalculateDistance(UserLatitude, UserLongitude);
-            return distance <= allowedRadius;
+            return distance <= _allowedRadius;
         }
 
         private double CalculateDistance(double UserLatitude, double UserLongitude)
         {
             var R = 6371000; // Radius of the Earth in meters
-            var latRad1 = companyLatitude * Math.PI / 180;
+            var latRad1 = _companyLatitude * Math.PI / 180;
             var latRad2 = UserLatitude * Math.PI / 180;
-            var deltaLat = (UserLatitude - companyLatitude) * Math.PI / 180;
-            var deltaLon = (UserLongitude - companyLongitude) * Math.PI / 180;
+            var deltaLat = (UserLatitude - _companyLatitude) * Math.PI / 180;
+            var deltaLon = (UserLongitude - _companyLongitude) * Math.PI / 180;
 
             var a = Math.Sin(deltaLat / 2) * Math.Sin(deltaLat / 2) +
                     Math.Cos(latRad1) * Math.Cos(latRad2) *

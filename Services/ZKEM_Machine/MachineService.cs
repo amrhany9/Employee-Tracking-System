@@ -9,8 +9,8 @@ namespace back_end.Services.ZKEM_Machine
 {
     public class MachineService : IMachineService
     {
-        private string deviceIp;
-        private int devicePort;
+        private string _deviceIp;
+        private int _devicePort;
 
         private CZKEM _zkemKeeper;
         private bool _isConnected;
@@ -29,8 +29,9 @@ namespace back_end.Services.ZKEM_Machine
 
         public void setDeviceNetwork(string deviceIp, int devicePort)
         {
-            this.deviceIp = deviceIp;
-            this.devicePort = devicePort;
+            _deviceIp = deviceIp;
+            _devicePort = devicePort;
+            Connect();
         }
 
         public bool isConnected()
@@ -38,15 +39,17 @@ namespace back_end.Services.ZKEM_Machine
             return _isConnected;
         }
 
-        public void Connect()
+        private void Connect()
         {
-            _isConnected = _zkemKeeper.Connect_Net(deviceIp, devicePort);
+            _isConnected = _zkemKeeper.Connect_Net(_deviceIp, _devicePort);
 
             if (!_isConnected)
             {
                 GetLastError();
                 throw new Exception($"Error connecting to the fingerprint device. Error Code: {_lastErrorCode}");
             }
+
+            RegisterEvents();
         }
 
         private void RegisterEvents()
@@ -129,13 +132,18 @@ namespace back_end.Services.ZKEM_Machine
             _zkemKeeper.GetLastError(ref _lastErrorCode);
         }
 
-        public void Disconnect()
+        private void Disconnect()
         {
             if (_isConnected)
             {
                 _zkemKeeper.Disconnect();
                 _isConnected = false;
             }
+        }
+
+        ~MachineService()
+        {
+            Disconnect();
         }
     }
 }

@@ -4,6 +4,8 @@ namespace back_end.Services.ZKEM_Machine
 {
     public interface IMachineService
     {
-        public IEnumerable<Attendance> GetDailyAttendanceRecords();
+        void setDeviceNetwork(string deviceIp, int devicePort);
+        bool isConnected();
+        IEnumerable<Attendance> GetDailyAttendanceRecords();
     }
 }

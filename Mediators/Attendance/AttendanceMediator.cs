@@ -13,5 +13,32 @@ namespace back_end.Mediators.Attendance
             _attendanceRepository = attendanceRepository;
             _machineService = machineService;
         }
+
+        public void SyncDailyLogToDatabase()
+        {
+            IEnumerable<Models.Attendance> Log = _machineService.GetDailyAttendanceRecords();
+            _attendanceRepository.AddRange(Log);
+            _attendanceRepository.SaveChanges();
+        }
+
+        private void HandleDuplicatesInDatabase()
+        {
+
+        }
+
+        public void MarkDailyLogAsDeleted()
+        {
+            IEnumerable<Models.Attendance> Log = _attendanceRepository.GetByFilter(x => x.CheckDate == DateTime.Today).ToList();
+            foreach (var attendance in Log)
+            {
+                _attendanceRepository.Delete(attendance);
+            }
+            _attendanceRepository.SaveChanges();
+        }
+
+        public void ArchiveWeekLogs()
+        {
+
+        }
     }
 }

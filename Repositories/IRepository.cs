@@ -12,7 +12,6 @@ namespace back_end.Repositories
         void Update(T entity);
         void Delete(T entity);
         void HardDelete(T entity);
-        void HardDelete(int id);
         void SaveChanges();
     }
 }
