@@ -20,6 +20,9 @@ namespace back_end.Configurations
 
             builder.Property(ar => ar.CheckDate)
                   .IsRequired();
+
+            builder.Property(x => x.IsDeleted)
+                .HasDefaultValue(false);
         }
     }
 }

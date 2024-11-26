@@ -32,6 +32,7 @@ namespace back_end.Controllers
         }
 
         [HttpGet("Connect-Machine")]
+        [Authorize(Roles = "Admin")]
         public ActionResult ConnectToZkemDevice(string Ip, int Port)
         {
             _machineService.setDeviceNetwork(Ip, Port);
