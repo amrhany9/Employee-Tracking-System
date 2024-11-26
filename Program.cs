@@ -9,6 +9,9 @@ using back_end.Repositories;
 using back_end.Services.Token;
 using back_end.Services.Location;
 using back_end.Services.ZKEM_Machine;
+using back_end.Profiles;
+using back_end.Mediators.Attendance;
+using back_end.Services.Attendance;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,9 +35,10 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddSingleton<IMachineService, MachineService>();
 builder.Services.AddScoped(typeof(IRepository<>),typeof(Repository<>));
-builder.Services.AddScoped<UserService>();
-builder.Services.AddScoped<AccountService>();
-builder.Services.AddScoped<AttendanceService>();
+builder.Services.AddScoped<IAttendanceMediator, AttendanceMediator>();
+builder.Services.AddScoped<IAttendanceService, AttendanceService>();
+
+builder.Services.AddAutoMapper(typeof(AttendanceMappingProfile));
 
 // Add authentication
 builder.Services.AddAuthentication(options =>

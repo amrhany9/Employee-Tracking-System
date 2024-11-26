@@ -6,6 +6,7 @@ namespace back_end.Services.ZKEM_Machine
     {
         void setDeviceNetwork(string deviceIp, int devicePort);
         bool isConnected();
-        IEnumerable<Attendance> GetDailyAttendanceRecords();
+        List<Models.Attendance> GetDailyAttendanceRecords();
+        int GetLastError();
     }
 }

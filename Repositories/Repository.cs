@@ -30,6 +30,11 @@ namespace back_end.Repositories
             return _context.Set<T>().Where(x => !x.IsDeleted).Where(filter);
         }
 
+        public IQueryable<T> GetDeletedByFilter(Expression<Func<T, bool>> filter)
+        {
+            return _context.Set<T>().Where(x => x.IsDeleted).Where(filter);
+        }
+
         public void Add(T entity)
         {
             _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
@@ -49,14 +54,34 @@ namespace back_end.Repositories
             Update(entity);
         }
 
+        public void DeleteRange(IEnumerable<T> entities)
+        {
+            _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
+            foreach (var entity in entities) 
+            {
+                entity.IsDeleted = true;
+            }
+            UpdateRange(entities);
+        }
+
         public void HardDelete(T entity)
         {
             _context.Set<T>().Remove(entity);
         }
 
+        public void HardDeleteRange(IEnumerable<T> entities)
+        {
+            _context.Set<T>().RemoveRange(entities);
+        }
+
         public void Update(T entity)
         {
             _context.Set<T>().Update(entity);
+        }
+
+        public void UpdateRange(IEnumerable<T> entities)
+        {
+            _context.Set<T>().UpdateRange(entities);
         }
 
         public void SaveChanges()

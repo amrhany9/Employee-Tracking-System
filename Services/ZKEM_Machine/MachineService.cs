@@ -13,18 +13,14 @@ namespace back_end.Services.ZKEM_Machine
         private int _devicePort;
 
         private CZKEM _zkemKeeper;
-        private bool _isConnected;
-        private int _lastErrorCode;
+        public bool _isConnected;
+        public int _lastErrorCode;
 
-        private IRepository<Attendance> _attendanceRepository;
-
-        public MachineService(IRepository<Attendance> attendanceRepository)
+        public MachineService()
         {
             _zkemKeeper = new CZKEM();
             _isConnected = false;
             _lastErrorCode = 0;
-
-            _attendanceRepository = attendanceRepository;
         }
 
         public void setDeviceNetwork(string deviceIp, int devicePort)
@@ -43,12 +39,6 @@ namespace back_end.Services.ZKEM_Machine
         {
             _isConnected = _zkemKeeper.Connect_Net(_deviceIp, _devicePort);
 
-            if (!_isConnected)
-            {
-                GetLastError();
-                throw new Exception($"Error connecting to the fingerprint device. Error Code: {_lastErrorCode}");
-            }
-
             RegisterEvents();
         }
 
@@ -65,7 +55,7 @@ namespace back_end.Services.ZKEM_Machine
             {
                 DateTime checkDate = new DateTime(Year, Month, Day, Hour, Minute, Second);
 
-                Attendance attendance = new Attendance
+                Models.Attendance attendance = new Models.Attendance
                 {
                     UserId = EnrollNumber,
                     VerifyMode = VerifyMethod,
@@ -73,14 +63,14 @@ namespace back_end.Services.ZKEM_Machine
                     CheckDate = checkDate,
                 };
 
-                _attendanceRepository.Add(attendance);
-                _attendanceRepository.SaveChanges();
+                //_attendanceRepository.Add(attendance);
+                //_attendanceRepository.SaveChanges();
             }
         }
 
-        public IEnumerable<Attendance> GetDailyAttendanceRecords()
+        public List<Models.Attendance> GetDailyAttendanceRecords()
         {
-            IEnumerable<Attendance> logs = new List<Attendance>();
+            List<Models.Attendance> logs = [];
             DateTime today = DateTime.Now;
 
             if (_zkemKeeper.ReadGeneralLogData(1))
@@ -106,7 +96,7 @@ namespace back_end.Services.ZKEM_Machine
                 {
                     if (yearValue == today.Year && monthValue == today.Month && day == today.Day)
                     {
-                        Attendance userAttendance = new Attendance
+                        Models.Attendance userAttendance = new Models.Attendance
                         {
                             UserId = enrollNumber,
                             VerifyMode = verifyMode,
@@ -114,7 +104,7 @@ namespace back_end.Services.ZKEM_Machine
                             CheckDate = new DateTime(yearValue, monthValue, day, hour, minute, 0),
                         };
 
-                        logs.Append(userAttendance);
+                        logs.Add(userAttendance);
                     }
                 }
 
@@ -122,14 +112,14 @@ namespace back_end.Services.ZKEM_Machine
             }
             else
             {
-                GetLastError();
-                throw new Exception($"Error reading general log data from the fingerprint device. Error Code: {_lastErrorCode}");
+                throw new Exception($"Error reading general log data from the fingerprint device. Error Code: {GetLastError()}");
             }
         }
 
-        public void GetLastError()
+        public int GetLastError()
         {
             _zkemKeeper.GetLastError(ref _lastErrorCode);
+            return _lastErrorCode;
         }
 
         private void Disconnect()

@@ -1,5 +1,6 @@
 ﻿using back_end.Data;
 using back_end.Models;
+using back_end.Repositories;
 using back_end.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -12,18 +13,18 @@ namespace back_end.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private UserService _userService;
+        private IRepository<User> _userRepository;
 
-        public UserController(UserService userService)
+        public UserController(IRepository<User> userRepository)
         {
-            _userService = userService;
+            _userRepository = userRepository;
         }
 
         [HttpGet] // GET : api/users
         [Authorize(Roles = "Admin")]
         public ActionResult<IEnumerable<User>> GetUsers()
         {
-            var users = _userService.GetAllUsers();
+            var users = _userRepository.GetAll();
 
             return Ok(users);
         }
@@ -31,7 +32,7 @@ namespace back_end.Controllers
         [HttpGet("{id}")] // GET : api/users/1
         public ActionResult<User> GetUser(int id)
         {
-            var user = _userService.GetUser(id);
+            var user = _userRepository.GetById(id);
 
             return Ok(user);
         }

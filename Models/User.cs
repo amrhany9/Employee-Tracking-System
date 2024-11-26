@@ -11,6 +11,6 @@ namespace back_end.Models
         public string UserPhotoPath { get; set; }
 
         public Account UserAccount { get; set; }
-        public ICollection<Attendance> UserAttendances { get; set; }
+        public IEnumerable<Attendance> UserAttendances { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using back_end.Data;
 using back_end.DTOs;
 using back_end.Models;
+using back_end.Repositories;
 using back_end.Services.Token;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,16 +15,18 @@ namespace back_end.Controllers
     public class AccountController : ControllerBase
     {
         private ITokenService _tokenService;
+        private IRepository<Account> _accountRepository;
 
-        public AccountController(ITokenService tokenService)
+        public AccountController(ITokenService tokenService, IRepository<Account> accountRepository)
         {
             _tokenService = tokenService;
+            _accountRepository = accountRepository;
         }
 
         [HttpPost("log-in")] // POST : api/account/login
-        public ActionResult<string> Login(LoginDTO loginDTO)
+        public ActionResult Login(LoginDTO loginDTO)
         {
-            var userAccount = _context.Accounts.SingleOrDefault(x => x.UserName == loginDTO.UserName);
+            var userAccount = _accountRepository.GetByFilter(x => x.UserName == loginDTO.UserName).SingleOrDefault();
 
             if (userAccount == null)
             {
@@ -45,7 +48,7 @@ namespace back_end.Controllers
 
         [HttpGet("log-out")]
         [Authorize]
-        public ActionResult<string> Logout()
+        public ActionResult Logout()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -54,7 +57,7 @@ namespace back_end.Controllers
                 return Unauthorized("User ID could not be found.");
             }
 
-            var userAccount = _context.Accounts.SingleOrDefault(x => x.UserId == int.Parse(userId));
+            var userAccount = _accountRepository.GetById(int.Parse(userId)).SingleOrDefault();
 
             if (userAccount == null)
             {
