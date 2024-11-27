@@ -16,11 +16,13 @@ namespace back_end.Controllers
     {
         private ITokenService _tokenService;
         private IRepository<Account> _accountRepository;
+        private IRepository<User> _userRepository;
 
-        public AccountController(ITokenService tokenService, IRepository<Account> accountRepository)
+        public AccountController(ITokenService tokenService, IRepository<Account> accountRepository, IRepository<User> userRepository)
         {
             _tokenService = tokenService;
             _accountRepository = accountRepository;
+            _userRepository = userRepository;
         }
 
         [HttpPost("log-in")] // POST : api/account/login
@@ -33,30 +35,23 @@ namespace back_end.Controllers
                     return BadRequest(new { message = "Username and password are required" });
                 }
 
-                var userAccount = _accountRepository.GetByFilter(x => x.UserName == loginDTO.UserName && x.Password == loginDTO.Password).Include(x => x.User).Single();
+                var Account = _accountRepository.GetByFilter(x => x.UserName == loginDTO.UserName && x.Password == loginDTO.Password).FirstOrDefault();
 
-                if (userAccount == null)
+                if (Account == null)
                 {
                     return Unauthorized(new { message = "Invalid credentials" });
                 }
 
-                var token = _tokenService.GenerateToken(userAccount);
+                var User = _userRepository.GetById(Account.UserId);
 
-                return Ok(new { token = token, role = userAccount.Role, user = userAccount.User });
+                var token = _tokenService.GenerateToken(Account);
+
+                return Ok(new { token = token, role = Account.Role, user = User });
             }
             catch (Exception ex) 
             {
                 return StatusCode(500, new { message = "An error occurred while processing your request" });
             }
-        }
-
-        [HttpGet("log-out")]
-        [Authorize]
-        public ActionResult Logout()
-        {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            return Ok();
         }
     }
 }

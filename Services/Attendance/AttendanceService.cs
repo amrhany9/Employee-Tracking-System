@@ -1,4 +1,5 @@
-﻿using back_end.Repositories;
+﻿using back_end.Models;
+using back_end.Repositories;
 
 namespace back_end.Services.Attendance
 {
@@ -11,14 +12,19 @@ namespace back_end.Services.Attendance
             _attendanceRepository = attendanceRepository;
         }
 
+        public void AddAttendance(Models.Attendance attendance)
+        {
+            _attendanceRepository.Add(attendance);
+        }
+
         public IEnumerable<Models.Attendance> GetLastWeekLog()
         {
-            return _attendanceRepository.GetDeletedByFilter(x => x.CheckDate <= DateTime.Now.AddDays(-7)).ToList();
+            return _attendanceRepository.GetDeletedByFilter(x => x.CheckDate.Date <= DateTime.Now.AddDays(-7)).ToList();
         }
 
         public IEnumerable<Models.Attendance> GetDailyLog()
         {
-            return _attendanceRepository.GetByFilter(x => x.CheckDate == DateTime.Today).ToList();
+            return _attendanceRepository.GetByFilter(x => x.CheckDate.Date == DateTime.Today).ToList();
         }
 
         public void AddLog(IEnumerable<Models.Attendance> Log)

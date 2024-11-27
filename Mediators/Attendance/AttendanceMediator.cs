@@ -45,8 +45,12 @@ namespace back_end.Mediators.Attendance
                         }
                     }
                 }
+                _attendanceService.AddLog(UniqueLog);
             }
-            _attendanceService.AddLog(Log);
+            else
+            {
+                _attendanceService.AddLog(dailyLog);
+            }
             _attendanceService.SaveChanges();
         }
 

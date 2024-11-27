@@ -20,17 +20,8 @@ namespace back_end.Controllers
             _userRepository = userRepository;
         }
 
-        [HttpGet] // GET : api/users
-        [Authorize(Roles = "Admin")]
-        public ActionResult<IEnumerable<User>> GetUsers()
-        {
-            var users = _userRepository.GetAll();
-
-            return Ok(users);
-        }
-
         [HttpGet("{id}")] // GET : api/users/1
-        public ActionResult<User> GetUser(int id)
+        public ActionResult<User> GetUserById(int id)
         {
             var user = _userRepository.GetById(id);
 

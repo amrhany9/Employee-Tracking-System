@@ -31,8 +31,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(
 builder.Services.AddCors();
 
 // Add Custom Services
-builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<ILocationService, LocationService>();
+builder.Services.AddSingleton<ITokenService, TokenService>();
+builder.Services.AddSingleton<ILocationService, LocationService>();
 builder.Services.AddSingleton<IMachineService, MachineService>();
 builder.Services.AddScoped(typeof(IRepository<>),typeof(Repository<>));
 builder.Services.AddScoped<IAttendanceMediator, AttendanceMediator>();

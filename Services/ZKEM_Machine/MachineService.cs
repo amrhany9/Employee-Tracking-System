@@ -58,8 +58,8 @@ namespace back_end.Services.ZKEM_Machine
                 Models.Attendance attendance = new Models.Attendance
                 {
                     UserId = EnrollNumber,
-                    VerifyMode = VerifyMethod,
-                    CheckType = AttState,
+                    VerifyMode = (Constants.Enums.VerifyMode)VerifyMethod,
+                    CheckType = (Constants.Enums.CheckType)AttState,
                     CheckDate = checkDate,
                 };
 
@@ -99,8 +99,8 @@ namespace back_end.Services.ZKEM_Machine
                         Models.Attendance userAttendance = new Models.Attendance
                         {
                             UserId = enrollNumber,
-                            VerifyMode = verifyMode,
-                            CheckType = inOutMode,
+                            VerifyMode = (Constants.Enums.VerifyMode)verifyMode,
+                            CheckType = (Constants.Enums.CheckType)inOutMode,
                             CheckDate = new DateTime(yearValue, monthValue, day, hour, minute, 0),
                         };
 

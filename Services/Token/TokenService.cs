@@ -15,13 +15,13 @@ namespace back_end.Services.Token
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
         }
 
-        public string GenerateToken(Account userAccount)
+        public string GenerateToken(Account Account)
         {
             var claims = new List<Claim>()
             {
-                new Claim(ClaimTypes.NameIdentifier, userAccount.UserId.ToString()),
-                new Claim(ClaimTypes.Name, userAccount.UserName),
-                new Claim(ClaimTypes.Role, userAccount.Role)
+                new Claim(ClaimTypes.NameIdentifier, Account.UserId.ToString()),
+                new Claim(ClaimTypes.Name, Account.UserName),
+                new Claim(ClaimTypes.Role, Account.Role)
             };
 
             var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256);

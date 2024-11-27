@@ -5,10 +5,10 @@ namespace back_end.Models
 {
     public class Account : BaseModel
     {
-        public int? UserId { get; set; }
+        public int UserId { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
-        public string Role { get; set; } // "Admin" or "Employee"
+        public String Role { get; set; } // "Admin" or "Employee"
         public bool IsCheckedIn { get; set; }
 
         public User User { get; set; }
