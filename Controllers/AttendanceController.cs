@@ -86,7 +86,6 @@ namespace back_end.Controllers
         [Authorize]
         public ActionResult<Attendance> CheckOut(CheckInOutDTO checkInOutDTO)
         {
-            // Get the User ID from the claims (the token)
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (userId == null)

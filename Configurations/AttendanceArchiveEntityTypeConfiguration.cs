@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace back_end.Configurations
 {
-    public class AttendanceArchiveEntityTypeConfiguration : IEntityTypeConfiguration<AttendanceArchive>
+    public class AttendanceArchiveEntityTypeConfiguration : IEntityTypeConfiguration<AttArchive>
     {
-        public void Configure(EntityTypeBuilder<AttendanceArchive> builder)
+        public void Configure(EntityTypeBuilder<AttArchive> builder)
         {
             builder.HasKey(ar => ar.Id);
 

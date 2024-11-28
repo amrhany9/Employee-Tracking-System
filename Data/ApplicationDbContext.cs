@@ -15,12 +15,12 @@ namespace back_end.Data
             new UserEntityTypeConfiguration().Configure(modelBuilder.Entity<User>());
             new AccountEntityTypeConfiguration().Configure(modelBuilder.Entity<Account>());
             new AttendanceEntityTypeConfiguration().Configure(modelBuilder.Entity<Attendance>());
-            new AttendanceArchiveEntityTypeConfiguration().Configure(modelBuilder.Entity<AttendanceArchive>());
+            new AttendanceArchiveEntityTypeConfiguration().Configure(modelBuilder.Entity<AttArchive>());
         }
 
         public DbSet<User> Users { get; set; }
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Attendance> Attendances { get; set; }
-        public DbSet<AttendanceArchive> Archives { get; set; }
+        public DbSet<AttArchive> Archives { get; set; }
     }
 }

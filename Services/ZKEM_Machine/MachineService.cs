@@ -4,11 +4,14 @@ using System.Linq;
 using zkemkeeper;
 using System.Runtime.InteropServices;
 using back_end.Repositories;
+using back_end.Services.Attendance;
 
 namespace back_end.Services.ZKEM_Machine
 {
     public class MachineService : IMachineService
     {
+        private IServiceScopeFactory _serviceScopeFactory;
+
         private string _deviceIp;
         private int _devicePort;
 
@@ -16,11 +19,13 @@ namespace back_end.Services.ZKEM_Machine
         public bool _isConnected;
         public int _lastErrorCode;
 
-        public MachineService()
+        public MachineService(IServiceScopeFactory serviceScopeFactory)
         {
             _zkemKeeper = new CZKEM();
             _isConnected = false;
             _lastErrorCode = 0;
+
+            _serviceScopeFactory = serviceScopeFactory;
         }
 
         public void setDeviceNetwork(string deviceIp, int devicePort)
@@ -63,6 +68,17 @@ namespace back_end.Services.ZKEM_Machine
                     CheckDate = checkDate,
                 };
 
+                // New Logic Processing New Attendance
+                using(var scope = _serviceScopeFactory.CreateScope())
+                {
+                    var attendanceService = scope.ServiceProvider.GetRequiredService<IAttendanceService>();
+                    var userRepository = scope.ServiceProvider.GetRequiredService<IRepository<User>>();
+
+                    attendanceService.AddAttendance(attendance);
+                    attendanceService.SaveChanges();
+
+                    var user = userRepository.GetById(attendance.UserId);
+                }
                 //_attendanceRepository.Add(attendance);
                 //_attendanceRepository.SaveChanges();
             }

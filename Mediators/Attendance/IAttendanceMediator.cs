@@ -2,8 +2,9 @@
 {
     public interface IAttendanceMediator
     {
-        void SyncDailyLogToDatabase();
-        void MarkDailyLogAsDeleted();
+        void SyncDailyLog();
+        void DeleteDailyLog();
+        void HardDeleteDailyLog();
         void ArchiveWeekLogs();
     }
 }

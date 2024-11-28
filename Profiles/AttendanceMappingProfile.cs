@@ -6,7 +6,7 @@ namespace back_end.Profiles
     {
         public AttendanceMappingProfile()
         {
-            CreateMap<Models.Attendance, Models.AttendanceArchive>().ReverseMap();
+            CreateMap<Models.Attendance, Models.AttArchive>().ReverseMap();
         }
     }
 }

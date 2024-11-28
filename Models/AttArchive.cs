@@ -1,6 +1,6 @@
 ﻿namespace back_end.Models
 {
-    public class AttendanceArchive : BaseModel
+    public class AttArchive : BaseModel
     {
         public int UserId { get; set; }
         public int VerifyMode { get; set; } // 0: "Finger Print" or 1: "Password" or 2: "Tracker App"
