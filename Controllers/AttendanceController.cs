@@ -58,6 +58,11 @@ namespace back_end.Controllers
                 return BadRequest("This User Account Is Already Checked In");
             }
 
+            if (!_locationService.IsLocationSet())
+            {
+                return BadRequest("Company Location Is Not Set, Wait For Admin To Proceed");
+            }
+
             bool isInCompanyArea = _locationService.IsWithinCompanyArea(locationDTO.Latitude, locationDTO.Longitude);
 
             if (!isInCompanyArea)

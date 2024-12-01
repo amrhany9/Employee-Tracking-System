@@ -8,13 +8,27 @@
 
         public void SetCompanyCoordinates(double companyLatitude, double companyLongitude)
         {
+            if (companyLatitude < -90 || companyLatitude > 90)
+                throw new ArgumentOutOfRangeException(nameof(companyLatitude), "Latitude must be between -90 and 90.");
+
+            if (companyLongitude < -180 || companyLongitude > 180)
+                throw new ArgumentOutOfRangeException(nameof(companyLongitude), "Longitude must be between -180 and 180.");
+
             _companyLatitude = companyLatitude;
             _companyLongitude = companyLongitude;
         }
 
         public void SetAllowedRadius(double allowedRadius)
         {
+            if (allowedRadius <= 0)
+                throw new ArgumentOutOfRangeException(nameof(allowedRadius), "Radius must be greater than 0.");
+            
             _allowedRadius = allowedRadius;
+        }
+
+        public bool IsLocationSet()
+        {
+            return _companyLatitude != 0 && _companyLongitude != 0 && _allowedRadius > 0;
         }
 
         public bool IsWithinCompanyArea(double UserLatitude, double UserLongitude)

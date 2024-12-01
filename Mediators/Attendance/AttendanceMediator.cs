@@ -22,6 +22,8 @@ namespace back_end.Mediators.Attendance
 
         public void SyncDailyLog()
         {
+            // To Be Continued
+            _machineService.setDeviceNetwork("192.168.1.30", 4370);
             if (_machineService.isConnected())
             {
                 var MachineLog = _machineService.GetDailyAttendanceRecords();

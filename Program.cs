@@ -12,6 +12,7 @@ using back_end.Services.ZKEM_Machine;
 using back_end.Profiles;
 using back_end.Mediators.Attendance;
 using back_end.Services.Attendance;
+using back_end.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,7 +39,10 @@ builder.Services.AddScoped(typeof(IRepository<>),typeof(Repository<>));
 builder.Services.AddScoped<IAttendanceMediator, AttendanceMediator>();
 builder.Services.AddScoped<IAttendanceService, AttendanceService>();
 
+builder.Services.AddHostedService<AppActionService>();
+
 builder.Services.AddAutoMapper(typeof(AttendanceMappingProfile));
+builder.Services.AddAutoMapper(typeof(AccountMappingProfile));
 
 // Add authentication
 builder.Services.AddAuthentication(options =>

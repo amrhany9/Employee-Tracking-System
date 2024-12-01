@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using back_end.DTOs;
+using back_end.Models;
 
 namespace back_end.Profiles
 {
@@ -6,7 +8,7 @@ namespace back_end.Profiles
     {
         public AttendanceMappingProfile()
         {
-            CreateMap<Models.Attendance, Models.AttArchive>().ReverseMap();
+            CreateMap<Attendance, AttArchive>().ReverseMap();
         }
     }
 }
