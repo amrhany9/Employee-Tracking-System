@@ -37,7 +37,7 @@ namespace back_end.Controllers
 
         [HttpPost("check-in")]
         [Authorize]
-        public ActionResult<Attendance> CheckIn(CheckInOutDTO checkInOutDTO)
+        public ActionResult<Attendance> CheckIn(LocationDTO locationDTO)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -58,7 +58,7 @@ namespace back_end.Controllers
                 return BadRequest("This User Account Is Already Checked In");
             }
 
-            bool isInCompanyArea = _locationService.IsWithinCompanyArea(checkInOutDTO.Latitude, checkInOutDTO.Longitude);
+            bool isInCompanyArea = _locationService.IsWithinCompanyArea(locationDTO.Latitude, locationDTO.Longitude);
 
             if (!isInCompanyArea)
             {
@@ -70,7 +70,7 @@ namespace back_end.Controllers
                 UserId = int.Parse(userId),
                 VerifyMode = VerifyMode.Website,
                 CheckType = CheckType.CheckIn,
-                CheckDate = checkInOutDTO.CheckDate,
+                CheckDate = DateTime.Now,
             };
 
             _attendanceService.AddAttendance(userAttendance);
@@ -84,7 +84,7 @@ namespace back_end.Controllers
 
         [HttpPost("check-out")]
         [Authorize]
-        public ActionResult<Attendance> CheckOut(CheckInOutDTO checkInOutDTO)
+        public ActionResult<Attendance> CheckOut(LocationDTO locationDTO)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -110,7 +110,7 @@ namespace back_end.Controllers
                 UserId = int.Parse(userId),
                 VerifyMode = VerifyMode.Website,
                 CheckType = CheckType.CheckOut,
-                CheckDate = checkInOutDTO.CheckDate,
+                CheckDate = DateTime.Now,
             };
 
             _attendanceService.AddAttendance(userAttendance);
