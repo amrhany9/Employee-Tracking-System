@@ -4,7 +4,6 @@
     {
         void SyncDailyLog();
         void DeleteDailyLog();
-        void HardDeleteDailyLog();
         void ArchiveWeekLogs();
     }
 }

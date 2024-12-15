@@ -5,6 +5,7 @@ using zkemkeeper;
 using System.Runtime.InteropServices;
 using back_end.Repositories;
 using back_end.Services.Attendance;
+using System.Timers;
 
 namespace back_end.Services.ZKEM_Machine
 {
@@ -19,6 +20,9 @@ namespace back_end.Services.ZKEM_Machine
         public bool _isConnected;
         public int _lastErrorCode;
 
+        public int TimerInterval;
+        public System.Timers.Timer zkTimer1;
+
         public MachineService(IServiceScopeFactory serviceScopeFactory)
         {
             _zkemKeeper = new CZKEM();
@@ -26,6 +30,9 @@ namespace back_end.Services.ZKEM_Machine
             _lastErrorCode = 0;
 
             _serviceScopeFactory = serviceScopeFactory;
+
+            TimerInterval = 15000;
+            zkTimer1 = new System.Timers.Timer(TimerInterval);
         }
 
         public void setDeviceNetwork(string deviceIp, int devicePort)
@@ -47,17 +54,62 @@ namespace back_end.Services.ZKEM_Machine
             RegisterEvents();
         }
 
-        private void RegisterEvents()
+        public void RegisterEvents()
         {
             if (!_isConnected) return;
 
-            _zkemKeeper.OnAttTransaction += ProcessNewAttendance;
+            if (_zkemKeeper.RegEvent(1, 1))
+            {
+                _zkemKeeper.OnAttTransaction += new _IZKEMEvents_OnAttTransactionEventHandler(ProcessNewAttendance);
+
+                zkTimer1.Elapsed += new ElapsedEventHandler(zkTimer1_Tick);
+                zkTimer1.Enabled = true;
+            }
+        }
+
+        public void UnregisterEvents()
+        {
+            zkTimer1.Enabled = false;
+            zkTimer1.Elapsed -= new ElapsedEventHandler(zkTimer1_Tick);
+
+            _zkemKeeper.OnAttTransaction -= new _IZKEMEvents_OnAttTransactionEventHandler(ProcessNewAttendance);
+        }
+
+        protected virtual void zkTimer1_Tick(object sender, ElapsedEventArgs e) 
+        {
+            try
+            {
+                zkTimer1.Enabled = false; 
+                if (_isConnected)
+                {
+                    if (_zkemKeeper.ReadRTLog(1))
+                    {
+                        while (_isConnected && _zkemKeeper.GetRTLog(1))
+                        {
+                            ;
+                        }
+                    }
+                    else
+                    {
+                        GetLastError();
+                        if (_lastErrorCode == -7 || _lastErrorCode == -1) Disconnect();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                zkTimer1.Enabled = _isConnected;
+            }
         }
 
         private void ProcessNewAttendance(int EnrollNumber, int IsInValid, int AttState, int VerifyMethod, int Year, int Month, int Day, int Hour, int Minute, int Second)
         {
-            if (IsInValid == 0)
-            {
+            //if (IsInValid == 0)
+            //{
                 DateTime checkDate = new DateTime(Year, Month, Day, Hour, Minute, Second);
 
                 Models.Attendance attendance = new Models.Attendance
@@ -72,16 +124,11 @@ namespace back_end.Services.ZKEM_Machine
                 using(var scope = _serviceScopeFactory.CreateScope())
                 {
                     var attendanceService = scope.ServiceProvider.GetRequiredService<IAttendanceService>();
-                    var userRepository = scope.ServiceProvider.GetRequiredService<IRepository<User>>();
 
                     attendanceService.AddAttendance(attendance);
                     attendanceService.SaveChanges();
-
-                    var user = userRepository.GetById(attendance.UserId);
                 }
-                //_attendanceRepository.Add(attendance);
-                //_attendanceRepository.SaveChanges();
-            }
+            //}
         }
 
         public List<Models.Attendance> GetDailyAttendanceRecords()
@@ -144,12 +191,24 @@ namespace back_end.Services.ZKEM_Machine
             {
                 _zkemKeeper.Disconnect();
                 _isConnected = false;
+
+                UnregisterEvents();
+            }
+        }
+
+        public void Dispose()
+        {
+            Disconnect();
+            if (zkTimer1 != null)
+            {
+                zkTimer1.Dispose();
+                zkTimer1 = null;
             }
         }
 
         ~MachineService()
         {
-            Disconnect();
+            Dispose();
         }
     }
 }

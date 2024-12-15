@@ -40,12 +40,6 @@ namespace back_end.Mediators.Attendance
             _attendanceService.SaveChanges();
         }
 
-        public void HardDeleteDailyLog()
-        {
-            _attendanceService.HardDeleteLog(_attendanceService.GetDailyLog());
-            _attendanceService.SaveChanges();
-        }
-
         public void ArchiveWeekLogs()
         {
             var LogsToArchive = _attendanceService.GetLastWeekLog();
