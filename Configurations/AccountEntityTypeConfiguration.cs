@@ -29,9 +29,6 @@ namespace back_end.Configurations
                   .IsRequired()
                   .HasMaxLength(10);
 
-            builder.Property(x => x.IsCheckedIn)
-                  .HasDefaultValue(false);
-
             builder.Property(x => x.IsDeleted)
                 .HasDefaultValue(false);
         }

@@ -10,6 +10,7 @@ namespace back_end.Models
         public string Phone { get; set; }
         public string UserPhotoPath { get; set; }
         public int DepartmentId { get; set; }
+        public bool IsCheckedIn { get; set; }
 
         public Account UserAccount { get; set; }
         public Department Department { get; set; }

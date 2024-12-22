@@ -16,7 +16,6 @@ namespace back_end.Controllers
     public class UserController : ControllerBase
     {
         private IRepository<User> _userRepository;
-        private IRepository<Department> _departmentRepository;
 
         public UserController(IRepository<User> userRepository)
         {
@@ -46,10 +45,10 @@ namespace back_end.Controllers
             return Ok(user);
         }
 
-        [HttpPost("Get-Users-By-Department")]
+        [HttpPost("{departmentId}")]
         public ActionResult<IEnumerable<User>> GetUsersByDepartment(int departmentId)
         {
-            var users = _departmentRepository.GetByFilter(x => x.Id == departmentId).Include(x => x.Users).ToList();
+            var users = _userRepository.GetByFilter(x => x.DepartmentId == departmentId).ToList();
 
             return Ok(users);
         }

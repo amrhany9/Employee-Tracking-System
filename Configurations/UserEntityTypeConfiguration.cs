@@ -35,6 +35,9 @@ namespace back_end.Configurations
             builder.Property(x => x.UserPhotoPath)
                 .HasMaxLength(255);
 
+            builder.Property(x => x.IsCheckedIn)
+                  .HasDefaultValue(false);
+
             builder.Property(x => x.IsDeleted)
                 .HasDefaultValue(false);
         }

@@ -20,111 +20,111 @@ namespace back_end.Controllers
     [ApiController]
     public class AttendanceController : ControllerBase
     {
-        private ILocationService _locationService;
-        private IAttendanceMediator _attendanceMediator;
-        private IAttendanceService _attendanceService;
-        private IMachineService _machineService;
-        private IRepository<Account> _accountRepository;
+        //private ILocationService _locationService;
+        //private IAttendanceMediator _attendanceMediator;
+        //private IAttendanceService _attendanceService;
+        //private IMachineService _machineService;
+        //private IRepository<Account> _accountRepository;
 
-        public AttendanceController(ILocationService locationService, IAttendanceMediator attendanceMediator, IMachineService machineService, IAttendanceService attendanceService, IRepository<Account> accountRepository)
-        {
-            _locationService = locationService;
-            _attendanceMediator = attendanceMediator;
-            _machineService = machineService;
-            _attendanceService = attendanceService;
-            _accountRepository = accountRepository;
-        }
+        //public AttendanceController(ILocationService locationService, IAttendanceMediator attendanceMediator, IMachineService machineService, IAttendanceService attendanceService, IRepository<Account> accountRepository)
+        //{
+        //    _locationService = locationService;
+        //    _attendanceMediator = attendanceMediator;
+        //    _machineService = machineService;
+        //    _attendanceService = attendanceService;
+        //    _accountRepository = accountRepository;
+        //}
 
-        [HttpPost("check-in")]
-        [Authorize]
-        public ActionResult<Attendance> CheckIn(LocationDTO locationDTO)
-        {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        //[HttpPost("check-in")]
+        //[Authorize]
+        //public ActionResult<Attendance> CheckIn(LocationDTO locationDTO)
+        //{
+        //    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if (userId == null)
-            {
-                return Unauthorized("User ID could not be found.");
-            }
+        //    if (userId == null)
+        //    {
+        //        return Unauthorized("User ID could not be found.");
+        //    }
 
-            var Account = _accountRepository.GetByFilter(x => x.UserId == int.Parse(userId)).FirstOrDefault(); // Find user by ID
+        //    var Account = _accountRepository.GetByFilter(x => x.UserId == int.Parse(userId)).FirstOrDefault(); // Find user by ID
 
-            if (Account == null)
-            {
-                return BadRequest("This User Account Is Not Found");
-            }
+        //    if (Account == null)
+        //    {
+        //        return BadRequest("This User Account Is Not Found");
+        //    }
 
-            if (Account.IsCheckedIn)
-            {
-                return BadRequest("This User Account Is Already Checked In");
-            }
+        //    if (Account.IsCheckedIn)
+        //    {
+        //        return BadRequest("This User Account Is Already Checked In");
+        //    }
 
-            if (!_locationService.IsLocationSet())
-            {
-                return BadRequest("Company Location Is Not Set, Wait For Admin To Proceed");
-            }
+        //    if (!_locationService.IsLocationSet())
+        //    {
+        //        return BadRequest("Company Location Is Not Set, Wait For Admin To Proceed");
+        //    }
 
-            bool isInCompanyArea = _locationService.IsWithinCompanyArea(locationDTO.Latitude, locationDTO.Longitude);
+        //    bool isInCompanyArea = _locationService.IsWithinCompanyArea(locationDTO.Latitude, locationDTO.Longitude);
 
-            if (!isInCompanyArea)
-            {
-                return BadRequest("You Must Be Within The Company Area To Check In");
-            }
+        //    if (!isInCompanyArea)
+        //    {
+        //        return BadRequest("You Must Be Within The Company Area To Check In");
+        //    }
 
-            var userAttendance = new Attendance
-            {
-                UserId = int.Parse(userId),
-                VerifyMode = VerifyMode.Website,
-                CheckType = CheckType.CheckIn,
-                CheckDate = DateTime.Now,
-            };
+        //    var userAttendance = new Attendance
+        //    {
+        //        UserId = int.Parse(userId),
+        //        VerifyMode = VerifyMode.Website,
+        //        CheckType = CheckType.CheckIn,
+        //        CheckDate = DateTime.Now,
+        //    };
 
-            _attendanceService.AddAttendance(userAttendance);
-            Account.IsCheckedIn = true;
-            _accountRepository.Update(Account);
-            _accountRepository.SaveChanges();
-            _attendanceService.SaveChanges();
+        //    _attendanceService.AddAttendance(userAttendance);
+        //    Account.IsCheckedIn = true;
+        //    _accountRepository.Update(Account);
+        //    _accountRepository.SaveChanges();
+        //    _attendanceService.SaveChanges();
 
-            return Ok(userAttendance);
-        }
+        //    return Ok(userAttendance);
+        //}
 
-        [HttpPost("check-out")]
-        [Authorize]
-        public ActionResult<Attendance> CheckOut(LocationDTO locationDTO)
-        {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        //[HttpPost("check-out")]
+        //[Authorize]
+        //public ActionResult<Attendance> CheckOut(LocationDTO locationDTO)
+        //{
+        //    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if (userId == null)
-            {
-                return Unauthorized("User ID could not be found.");
-            }
+        //    if (userId == null)
+        //    {
+        //        return Unauthorized("User ID could not be found.");
+        //    }
 
-            var Account = _accountRepository.GetByFilter(x => x.UserId == int.Parse(userId)).FirstOrDefault();
+        //    var Account = _accountRepository.GetByFilter(x => x.UserId == int.Parse(userId)).FirstOrDefault();
 
-            if (Account == null)
-            {
-                return BadRequest("This User Account Is Not Found");
-            }
+        //    if (Account == null)
+        //    {
+        //        return BadRequest("This User Account Is Not Found");
+        //    }
 
-            if (!Account.IsCheckedIn)
-            {
-                return BadRequest("This User Account Is Not Checked In");
-            }
+        //    if (!Account.IsCheckedIn)
+        //    {
+        //        return BadRequest("This User Account Is Not Checked In");
+        //    }
 
-            var userAttendance = new Attendance
-            {
-                UserId = int.Parse(userId),
-                VerifyMode = VerifyMode.Website,
-                CheckType = CheckType.CheckOut,
-                CheckDate = DateTime.Now,
-            };
+        //    var userAttendance = new Attendance
+        //    {
+        //        UserId = int.Parse(userId),
+        //        VerifyMode = VerifyMode.Website,
+        //        CheckType = CheckType.CheckOut,
+        //        CheckDate = DateTime.Now,
+        //    };
 
-            _attendanceService.AddAttendance(userAttendance);
-            Account.IsCheckedIn = false;
-            _accountRepository.Update(Account);
-            _accountRepository.SaveChanges();
-            _attendanceService.SaveChanges();
+        //    _attendanceService.AddAttendance(userAttendance);
+        //    Account.IsCheckedIn = false;
+        //    _accountRepository.Update(Account);
+        //    _accountRepository.SaveChanges();
+        //    _attendanceService.SaveChanges();
 
-            return Ok(userAttendance);
-        }
+        //    return Ok(userAttendance);
+        //}
     }
 }
