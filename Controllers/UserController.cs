@@ -45,12 +45,26 @@ namespace back_end.Controllers
             return Ok(user);
         }
 
-        [HttpPost("{departmentId}")]
-        public ActionResult<IEnumerable<User>> GetUsersByDepartment(int departmentId)
+        [HttpGet("users/department/{departmentId}")]
+        public async Task<IActionResult> GetUsersByDepartment(int departmentId, int pageNumber = 1, int pageSize = 10)
         {
-            var users = _userRepository.GetByFilter(x => x.DepartmentId == departmentId).ToList();
+            var usersQuery = _userRepository.GetByFilter(u => u.DepartmentId == departmentId).AsQueryable();
 
-            return Ok(users);
+            var usersPaged = await usersQuery
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            var totalUsers = await usersQuery.CountAsync(); 
+
+            var result = new
+            {
+                users = usersPaged,
+                totalCount = totalUsers
+            };
+
+            return Ok(result);
         }
+
     }
 }
