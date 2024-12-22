@@ -13,12 +13,14 @@ namespace back_end.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             new UserEntityTypeConfiguration().Configure(modelBuilder.Entity<User>());
+            new DepartmentEntityTypeConfiguration().Configure(modelBuilder.Entity<Department>());
             new AccountEntityTypeConfiguration().Configure(modelBuilder.Entity<Account>());
             new AttendanceEntityTypeConfiguration().Configure(modelBuilder.Entity<Attendance>());
             new AttendanceArchiveEntityTypeConfiguration().Configure(modelBuilder.Entity<AttArchive>());
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Department> Departments { get; set; }
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Attendance> Attendances { get; set; }
         public DbSet<AttArchive> Archives { get; set; }

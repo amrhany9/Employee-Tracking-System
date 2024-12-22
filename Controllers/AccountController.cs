@@ -46,7 +46,7 @@ namespace back_end.Controllers
 
                 var token = _tokenService.GenerateToken(Account);
 
-                return Ok(new { token = token, role = Account.Role, user = User });
+                return Ok(new { token = token, role = Account.Role});
             }
             catch (Exception ex) 
             {

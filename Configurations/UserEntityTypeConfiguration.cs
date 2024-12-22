@@ -11,6 +11,11 @@ namespace back_end.Configurations
             builder
                 .HasKey(x => x.Id);
 
+            builder
+                .HasOne(x => x.Department)
+                .WithMany(x => x.Users)
+                .HasForeignKey(x => x.DepartmentId);
+
             builder.Property(x => x.FullNameEn)
                 .IsRequired()
                 .HasMaxLength(100);
