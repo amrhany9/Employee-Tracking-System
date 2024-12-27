@@ -90,6 +90,39 @@ namespace back_end.Migrations
                     b.ToTable("Archives");
                 });
 
+            modelBuilder.Entity("back_end.Models.AttMachine", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<int>("MachineCode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MachineIP")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("MachineName")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("MachinePort")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Machines");
+                });
+
             modelBuilder.Entity("back_end.Models.Attendance", b =>
                 {
                     b.Property<int>("Id")

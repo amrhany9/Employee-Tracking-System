@@ -22,7 +22,7 @@ namespace back_end.Repositories
 
         public IQueryable<T> GetById(int id)
         {
-            return _context.Set<T>().Where(x => id == x.Id && !x.IsDeleted);
+            return _context.Set<T>().Where(x => x.Id == id && !x.IsDeleted);
         }
 
         public IQueryable<T> GetByFilter(Expression<Func<T, bool>> filter)

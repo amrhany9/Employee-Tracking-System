@@ -39,7 +39,7 @@ builder.Services.AddScoped(typeof(IRepository<>),typeof(Repository<>));
 builder.Services.AddScoped<IAttendanceMediator, AttendanceMediator>();
 builder.Services.AddScoped<IAttendanceService, AttendanceService>();
 
-//builder.Services.AddHostedService<AppActionService>();
+builder.Services.AddHostedService<AppActionService>();
 
 builder.Services.AddAutoMapper(typeof(AttendanceMappingProfile));
 builder.Services.AddAutoMapper(typeof(AccountMappingProfile));

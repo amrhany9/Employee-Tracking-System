@@ -17,14 +17,14 @@ namespace back_end.Services.Attendance
             _attendanceRepository.Add(attendance);
         }
 
-        public IEnumerable<Models.Attendance> GetLastWeekLog()
+        public IQueryable<Models.Attendance> GetLastWeekLog()
         {
-            return _attendanceRepository.GetDeletedByFilter(x => x.CheckDate.Date <= DateTime.Now.AddDays(-7)).ToList();
+            return _attendanceRepository.GetDeletedByFilter(x => x.CheckDate.Date <= DateTime.Now.AddDays(-7));
         }
 
-        public IEnumerable<Models.Attendance> GetDailyLog()
+        public IQueryable<Models.Attendance> GetDailyLog()
         {
-            return _attendanceRepository.GetByFilter(x => x.CheckDate.Date == DateTime.Today).ToList();
+            return _attendanceRepository.GetByFilter(x => x.CheckDate.Date == DateTime.Today);
         }
 
         public void AddLog(IEnumerable<Models.Attendance> Log)

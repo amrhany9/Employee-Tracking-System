@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using back_end.Repositories;
 using back_end.Services.Attendance;
 using System.Timers;
+using back_end.Constants.Enums;
 
 namespace back_end.Services.ZKEM_Machine
 {
@@ -31,7 +32,7 @@ namespace back_end.Services.ZKEM_Machine
 
             _serviceScopeFactory = serviceScopeFactory;
 
-            TimerInterval = 15000;
+            TimerInterval = 20000;
             zkTimer1 = new System.Timers.Timer(TimerInterval);
         }
 
@@ -124,6 +125,28 @@ namespace back_end.Services.ZKEM_Machine
                 using(var scope = _serviceScopeFactory.CreateScope())
                 {
                     var attendanceService = scope.ServiceProvider.GetRequiredService<IAttendanceService>();
+                    var userRepository = scope.ServiceProvider.GetRequiredService<IRepository<User>>();
+
+                    
+                    var user = userRepository.GetById(attendance.UserId).First();
+
+                    if (user != null)
+                    {
+                        switch (attendance.CheckType)
+                        {
+                            case CheckType.CheckIn:
+                                user.IsCheckedIn = true;
+                                userRepository.Update(user);
+                                break;
+
+                            case CheckType.CheckOut:
+                                user.IsCheckedIn = false;
+                                userRepository.Update(user);    
+                                break;
+                        }
+                    }
+
+                    userRepository.SaveChanges();
 
                     attendanceService.AddAttendance(attendance);
                     attendanceService.SaveChanges();
@@ -167,7 +190,10 @@ namespace back_end.Services.ZKEM_Machine
                             CheckDate = new DateTime(yearValue, monthValue, day, hour, minute, 0),
                         };
 
-                        logs.Add(userAttendance);
+                        if (!logs.Any(log => log.CheckDate == userAttendance.CheckDate))
+                        {
+                            logs.Add(userAttendance);
+                        }
                     }
                 }
 

@@ -17,6 +17,7 @@ namespace back_end.Data
             new AccountEntityTypeConfiguration().Configure(modelBuilder.Entity<Account>());
             new AttendanceEntityTypeConfiguration().Configure(modelBuilder.Entity<Attendance>());
             new AttendanceArchiveEntityTypeConfiguration().Configure(modelBuilder.Entity<AttArchive>());
+            new AttendanceMachineEntityTypeConfiguration().Configure(modelBuilder.Entity<AttMachine>());
         }
 
         public DbSet<User> Users { get; set; }
@@ -24,5 +25,6 @@ namespace back_end.Data
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Attendance> Attendances { get; set; }
         public DbSet<AttArchive> Archives { get; set; }
+        public DbSet<AttMachine> Machines { get; set; }
     }
 }
