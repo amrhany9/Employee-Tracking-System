@@ -13,6 +13,7 @@ using back_end.Profiles;
 using back_end.Mediators.Attendance;
 using back_end.Services.Attendance;
 using back_end.Services;
+using back_end.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,9 @@ builder.Services.AddControllers()
     {
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     }); ;
+
+// Configure SignalR
+builder.Services.AddSignalR();
 
 // Configure Entity Framework Core
 builder.Services.AddDbContext<ApplicationDbContext>(
@@ -109,5 +113,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<AttendanceHub>("/attendanceHub");
 
 app.Run();

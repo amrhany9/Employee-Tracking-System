@@ -7,6 +7,8 @@ using back_end.Repositories;
 using back_end.Services.Attendance;
 using System.Timers;
 using back_end.Constants.Enums;
+using Microsoft.AspNetCore.SignalR;
+using back_end.Hubs;
 
 namespace back_end.Services.ZKEM_Machine
 {
@@ -126,7 +128,7 @@ namespace back_end.Services.ZKEM_Machine
                 {
                     var attendanceService = scope.ServiceProvider.GetRequiredService<IAttendanceService>();
                     var userRepository = scope.ServiceProvider.GetRequiredService<IRepository<User>>();
-
+                    var attendanceHub = scope.ServiceProvider.GetRequiredService<AttendanceHub>();
                     
                     var user = userRepository.GetById(attendance.UserId).First();
 
@@ -150,6 +152,8 @@ namespace back_end.Services.ZKEM_Machine
 
                     attendanceService.AddAttendance(attendance);
                     attendanceService.SaveChanges();
+
+                    attendanceHub.Clients.All.SendAsync("ReceiveAttendanceUpdate", attendance);
                 }
             //}
         }

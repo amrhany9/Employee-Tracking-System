@@ -11,12 +11,14 @@ namespace back_end.Services
             _serviceProvider = serviceProvider;
         }
 
-        public async Task StartAsync(CancellationToken cancellationToken)
+        public  Task StartAsync(CancellationToken cancellationToken)
         {
-            using var scope = _serviceProvider.CreateScope();
-            var attendanceMediator = scope.ServiceProvider.GetRequiredService<IAttendanceMediator>();
+            //using var scope = _serviceProvider.CreateScope();
+            //var attendanceMediator = scope.ServiceProvider.GetRequiredService<IAttendanceMediator>();
 
-            await Task.Run(() => attendanceMediator.SyncDailyLog(), cancellationToken);
+            //await Task.Run(() => attendanceMediator.SyncDailyLog(), cancellationToken);
+
+            return Task.CompletedTask;
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
