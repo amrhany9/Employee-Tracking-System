@@ -153,7 +153,7 @@ namespace back_end.Services.ZKEM_Machine
                     attendanceService.AddAttendance(attendance);
                     attendanceService.SaveChanges();
 
-                    attendanceHub.Clients.All.SendAsync("ReceiveAttendanceUpdate", attendance);
+                    attendanceHub.NotifyNewAttendance(attendance);
                 }
             //}
         }
