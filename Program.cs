@@ -73,8 +73,7 @@ builder.Services.AddAuthentication(options =>
 
             // If the request is for SignalR
             var path = context.HttpContext.Request.Path;
-            if (!string.IsNullOrEmpty(accessToken) &&
-                (path.StartsWithSegments("/attendanceHub")))
+            if (!string.IsNullOrEmpty(accessToken) && (path.StartsWithSegments("/attendanceHub")))
             {
                 context.Token = accessToken;
             }
@@ -122,7 +121,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200").AllowCredentials());
+app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:4200"));
 
 app.UseHttpsRedirection();
 

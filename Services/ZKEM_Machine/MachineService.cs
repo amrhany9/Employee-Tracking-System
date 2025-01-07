@@ -15,6 +15,7 @@ namespace back_end.Services.ZKEM_Machine
     public class MachineService : IMachineService
     {
         private IServiceScopeFactory _serviceScopeFactory;
+        private IHubContext<AttendanceHub> _attendancehubContext;
 
         private string _deviceIp;
         private int _devicePort;
@@ -26,13 +27,14 @@ namespace back_end.Services.ZKEM_Machine
         public int TimerInterval;
         public System.Timers.Timer zkTimer1;
 
-        public MachineService(IServiceScopeFactory serviceScopeFactory)
+        public MachineService(IServiceScopeFactory serviceScopeFactory, IHubContext<AttendanceHub> attendancehubContext)
         {
             _zkemKeeper = new CZKEM();
             _isConnected = false;
             _lastErrorCode = 0;
 
             _serviceScopeFactory = serviceScopeFactory;
+            _attendancehubContext = attendancehubContext;
 
             TimerInterval = 20000;
             zkTimer1 = new System.Timers.Timer(TimerInterval);
@@ -111,51 +113,48 @@ namespace back_end.Services.ZKEM_Machine
 
         private void ProcessNewAttendance(int EnrollNumber, int IsInValid, int AttState, int VerifyMethod, int Year, int Month, int Day, int Hour, int Minute, int Second)
         {
-            //if (IsInValid == 0)
-            //{
-                DateTime checkDate = new DateTime(Year, Month, Day, Hour, Minute, Second);
+            DateTime checkDate = new DateTime(Year, Month, Day, Hour, Minute, Second);
 
-                Models.Attendance attendance = new Models.Attendance
-                {
-                    UserId = EnrollNumber,
-                    VerifyMode = (Constants.Enums.VerifyMode)VerifyMethod,
-                    CheckType = (Constants.Enums.CheckType)AttState,
-                    CheckDate = checkDate,
-                };
+            Models.Attendance attendance = new Models.Attendance
+            {
+                UserId = EnrollNumber,
+                VerifyMode = (Constants.Enums.VerifyMode)VerifyMethod,
+                CheckType = (Constants.Enums.CheckType)AttState,
+                CheckDate = checkDate,
+            };
 
-                // New Logic Processing New Attendance
-                using(var scope = _serviceScopeFactory.CreateScope())
-                {
-                    var attendanceService = scope.ServiceProvider.GetRequiredService<IAttendanceService>();
-                    var userRepository = scope.ServiceProvider.GetRequiredService<IRepository<User>>();
-                    var attendanceHub = scope.ServiceProvider.GetRequiredService<AttendanceHub>();
+            using(var scope = _serviceScopeFactory.CreateScope())
+            {
+                var attendanceService = scope.ServiceProvider.GetRequiredService<IAttendanceService>();
+                var userRepository = scope.ServiceProvider.GetRequiredService<IRepository<User>>();
+                //var attendanceHub = scope.ServiceProvider.GetRequiredService<IHubContext<AttendanceHub>>();
                     
-                    var user = userRepository.GetById(attendance.UserId).First();
+                var user = userRepository.GetById(attendance.UserId).First();
 
-                    if (user != null)
+                if (user != null)
+                {
+                    switch (attendance.CheckType)
                     {
-                        switch (attendance.CheckType)
-                        {
-                            case CheckType.CheckIn:
-                                user.IsCheckedIn = true;
-                                userRepository.Update(user);
-                                break;
+                        case CheckType.CheckIn:
+                            user.IsCheckedIn = true;
+                            userRepository.Update(user);
+                            break;
 
-                            case CheckType.CheckOut:
-                                user.IsCheckedIn = false;
-                                userRepository.Update(user);    
-                                break;
-                        }
+                        case CheckType.CheckOut:
+                            user.IsCheckedIn = false;
+                            userRepository.Update(user);    
+                            break;
                     }
-
-                    userRepository.SaveChanges();
-
-                    attendanceService.AddAttendance(attendance);
-                    attendanceService.SaveChanges();
-
-                    attendanceHub.NotifyNewAttendance(attendance);
                 }
-            //}
+
+                userRepository.SaveChanges();
+
+                attendanceService.AddAttendance(attendance);
+                attendanceService.SaveChanges();
+
+                //attendanceHub.Clients.Group("Admins").SendAsync("NewAttendance", attendance);
+                _attendancehubContext.Clients.Group("Admins").SendAsync("NewAttendance", attendance);
+            }
         }
 
         public List<Models.Attendance> GetDailyAttendanceRecords()

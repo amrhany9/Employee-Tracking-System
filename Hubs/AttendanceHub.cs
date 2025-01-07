@@ -5,12 +5,14 @@ using System.Security.Claims;
 
 namespace back_end.Hubs
 {
+    [Authorize]
     public class AttendanceHub : Hub
     {
-        [Authorize]
         public override async Task OnConnectedAsync()
         {
-            var userRole = Context.User?.FindFirst(ClaimTypes.Role)?.Value;
+            if (Context.User == null) throw new HubException("Cannot get current user claim");
+
+            var userRole = Context.User.FindFirst(ClaimTypes.Role)?.Value;
 
             if (userRole == "Admin")
             {
@@ -25,9 +27,11 @@ namespace back_end.Hubs
             await base.OnConnectedAsync();
         }
 
-        public void NotifyNewAttendance(Attendance attendance)
+        public override async Task OnDisconnectedAsync(Exception exception)
         {
-             Clients.Group("Admins").SendAsync("ProcessNewAttendance", attendance);
+            if (Context.User == null) throw new HubException("Cannot get current user claim");
+
+            await base.OnDisconnectedAsync(exception);
         }
     }
 }
