@@ -36,7 +36,7 @@ namespace back_end.Services.ZKEM_Machine
             _serviceScopeFactory = serviceScopeFactory;
             _attendancehubContext = attendancehubContext;
 
-            TimerInterval = 20000;
+            TimerInterval = 2000;
             zkTimer1 = new System.Timers.Timer(TimerInterval);
         }
 
@@ -129,7 +129,7 @@ namespace back_end.Services.ZKEM_Machine
                 var userRepository = scope.ServiceProvider.GetRequiredService<IRepository<User>>();
                 //var attendanceHub = scope.ServiceProvider.GetRequiredService<IHubContext<AttendanceHub>>();
                     
-                var user = userRepository.GetById(attendance.UserId).First();
+                var user = userRepository.GetById(attendance.UserId).FirstOrDefault();
 
                 if (user != null)
                 {
@@ -153,7 +153,8 @@ namespace back_end.Services.ZKEM_Machine
                 attendanceService.SaveChanges();
 
                 //attendanceHub.Clients.Group("Admins").SendAsync("NewAttendance", attendance);
-                _attendancehubContext.Clients.Group("Admins").SendAsync("NewAttendance", attendance);
+                var userDTO = new { attendance.UserId, attendance.User.IsCheckedIn };
+                _attendancehubContext.Clients.Group("Admins").SendAsync("NewAttendance", userDTO);
             }
         }
 

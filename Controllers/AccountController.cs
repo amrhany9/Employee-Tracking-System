@@ -1,10 +1,12 @@
 ﻿using back_end.Data;
 using back_end.DTOs;
+using back_end.Hubs;
 using back_end.Models;
 using back_end.Repositories;
 using back_end.Services.Token;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
@@ -50,8 +52,24 @@ namespace back_end.Controllers
             }
             catch (Exception ex) 
             {
-                return StatusCode(500, new { message = "An error occurred while processing your request" });
+                return StatusCode(500, new { message = $"An error occurred while processing your request: {ex}" });
             }
         }
+
+        //[HttpPost("Server-Test")]
+        //public ActionResult test(LoginDTO loginDTO)
+        //{
+        //    try
+        //    {
+        //        string text = "Hello!";
+        //        _attendanceHubContext.Clients.Group("Admins").SendAsync("NewAttendance", text);
+
+        //        return Ok();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, new { message = $"An error occurred while processing your request: {ex}" });
+        //    }
+        //}
     }
 }

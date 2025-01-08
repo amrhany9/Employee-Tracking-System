@@ -34,51 +34,51 @@ namespace back_end.Mediators.Attendance
         {
             var machine = _attMachineRepository.GetByFilter(x => x.MachineCode == 1).First();
             _machineService.setDeviceNetwork(machine.MachineIP, machine.MachinePort);
-            if (_machineService.isConnected())
-            {
-                var MachineLog = _machineService.GetDailyAttendanceRecords();
-                var DbLog = _attendanceService.GetDailyLog().ToList();
-                var UniqueLog = MachineLog.Except(DbLog).ToList();
+            //if (_machineService.isConnected())
+            //{
+            //    var MachineLog = _machineService.GetDailyAttendanceRecords();
+            //    var DbLog = _attendanceService.GetDailyLog().ToList();
+            //    var UniqueLog = MachineLog.Except(DbLog).ToList();
 
-                foreach (var attendance in UniqueLog)
-                {
-                    var user = _userRepository.GetById(attendance.UserId).First();
+            //    foreach (var attendance in UniqueLog)
+            //    {
+            //        var user = _userRepository.GetById(attendance.UserId).First();
 
-                    if (user != null)
-                    {
-                        switch (attendance.CheckType)
-                        {
-                            case CheckType.CheckIn:
-                                user.IsCheckedIn = true;
-                                break;
+            //        if (user != null)
+            //        {
+            //            switch (attendance.CheckType)
+            //            {
+            //                case CheckType.CheckIn:
+            //                    user.IsCheckedIn = true;
+            //                    break;
 
-                            case CheckType.CheckOut:
-                                user.IsCheckedIn = false;
-                                break;
+            //                case CheckType.CheckOut:
+            //                    user.IsCheckedIn = false;
+            //                    break;
 
-                            default:
-                                Console.WriteLine($"Unknown CheckType for attendance ID {attendance.Id}");
-                                break;
-                        }
-                    }
-                }
+            //                default:
+            //                    Console.WriteLine($"Unknown CheckType for attendance ID {attendance.Id}");
+            //                    break;
+            //            }
+            //        }
+            //    }
 
-                using (var transaction = _context.Database.BeginTransaction())
-                {
-                    try
-                    {
-                        _attendanceService.AddLog(UniqueLog);
-                        _attendanceService.SaveChanges();
-                        _userRepository.SaveChanges();
-                        transaction.Commit();
-                    }
-                    catch (Exception ex)
-                    {
-                        transaction.Rollback();
-                        throw new Exception("Error during sync operation: " + ex.Message);
-                    }
-                }
-            }
+            //    using (var transaction = _context.Database.BeginTransaction())
+            //    {
+            //        try
+            //        {
+            //            _attendanceService.AddLog(UniqueLog);
+            //            _attendanceService.SaveChanges();
+            //            _userRepository.SaveChanges();
+            //            transaction.Commit();
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            transaction.Rollback();
+            //            throw new Exception("Error during sync operation: " + ex.Message);
+            //        }
+            //    }
+            //}
         }
 
         public void DeleteDailyLog()
