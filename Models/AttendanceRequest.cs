@@ -4,18 +4,17 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace back_end.Models
 {
-    public class Attendance
+    public class AttendanceRequest
     {
-        public int attendanceId { get; set; }
-        public int machineCode { get; set; }
+        public int requestId { get; set; }
         public int employeeId { get; set; }
-        public VerifyMode verifyMode { get; set; }
         public CheckType checkType { get; set; }
         public DateTime checkDate { get; set; }
         public Decimal latitude { get; set; }
         public Decimal longitude { get; set; }
+        public string description { get; set; }
+        public RequestStatus status { get; set; }
 
-        public Machine machine { get; set; }
         public Employee employee { get; set; }
     } 
 }

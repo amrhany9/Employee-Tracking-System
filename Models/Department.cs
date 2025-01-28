@@ -1,9 +1,11 @@
 ﻿namespace back_end.Models
 {
-    public class Department : BaseModel
+    public class Department
     {
-        public string NameEn { get; set; }
-        public string NameAr { get; set; }
-        public ICollection<User> Users { get; set; }
+        public int departmentId { get; set; }
+        public string departmentNameEn { get; set; }
+        public string? departmentNameAr { get; set; }
+
+        public ICollection<Employee> employees { get; set; }
     }
 }

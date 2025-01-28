@@ -1,4 +1,8 @@
-﻿using back_end.Mediators.Attendance;
+﻿using back_end.Mediators.Machines;
+using back_end.Models;
+using back_end.Repositories;
+using back_end.Services.Location;
+using back_end.Services.ZKEM_Machine;
 
 namespace back_end.Services
 {
@@ -11,16 +15,30 @@ namespace back_end.Services
             _serviceProvider = serviceProvider;
         }
 
-        public async Task StartAsync(CancellationToken cancellationToken)
+        public Task StartAsync(CancellationToken cancellationToken)
         {
             using var scope = _serviceProvider.CreateScope();
-            var attendanceMediator = scope.ServiceProvider.GetRequiredService<IAttendanceMediator>();
 
-            await Task.Run(() => attendanceMediator.SyncDailyLog(), cancellationToken);
+            var machinesMediator = scope.ServiceProvider.GetRequiredService<IMachinesMediator>();
+            var companySetupRepository = scope.ServiceProvider.GetRequiredService<IRepository<CompanySetup>>();
+            var locationService = scope.ServiceProvider.GetRequiredService<ILocationService>();
+
+            machinesMediator.ConnectToAllMachines();
+
+            var companySetup = companySetupRepository.GetByFilter(x => x.companyId == 1).FirstOrDefault();
+            locationService.setCompanyCoordinates(companySetup);
+
+            return Task.CompletedTask;
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
+            using var scope = _serviceProvider.CreateScope();
+
+            var machinesMediator = scope.ServiceProvider.GetRequiredService<IMachinesMediator>();
+
+            machinesMediator.DisconnectFromAllMachines();
+
             return Task.CompletedTask;
         }
     }

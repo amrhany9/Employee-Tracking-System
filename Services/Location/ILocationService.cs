@@ -1,10 +1,10 @@
-﻿namespace back_end.Services.Location
+﻿using back_end.Models;
+
+namespace back_end.Services.Location
 {
     public interface ILocationService
     {
-        void SetCompanyCoordinates(double companyLatitude, double companyLongitude);
-        void SetAllowedRadius(double allowedRadius);
-        bool IsWithinCompanyArea(double UserLatitude, double UserLongitude);
+        void setCompanyCoordinates(CompanySetup companySetup);
         bool IsLocationSet();
     }
 }

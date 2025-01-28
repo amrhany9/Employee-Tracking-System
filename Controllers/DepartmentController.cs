@@ -5,19 +5,19 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace back_end.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class DepartmentController : ControllerBase
     {
-        private IRepository<Models.Department> _departmentRepository;
+        private IRepository<Department> _departmentRepository;
 
-        public DepartmentController(IRepository<Models.Department> departmentRepository)
+        public DepartmentController(IRepository<Department> departmentRepository)
         {
             _departmentRepository = departmentRepository;
         }
 
         [HttpGet("Get-All")]
-        public ActionResult<IEnumerable<Models.Department>> GetAllDepartments()
+        public ActionResult<IEnumerable<Department>> GetAllDepartments()
         {
             return Ok(_departmentRepository.GetAll().ToList());
         }

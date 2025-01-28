@@ -3,11 +3,9 @@
     public interface IAttendanceService
     {
         void AddAttendance(Models.Attendance attendance);
-        IQueryable<Models.Attendance> GetLastWeekLog();
         IQueryable<Models.Attendance> GetDailyLog();
         void AddLog(IEnumerable<Models.Attendance> Log);
         void DeleteLog(IEnumerable<Models.Attendance> Log);
-        void HardDeleteLog(IEnumerable<Models.Attendance> Log);
         void SaveChanges();
     }
 }

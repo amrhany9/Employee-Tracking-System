@@ -12,19 +12,23 @@ namespace back_end.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            new UserEntityTypeConfiguration().Configure(modelBuilder.Entity<User>());
-            new DepartmentEntityTypeConfiguration().Configure(modelBuilder.Entity<Department>());
-            new AccountEntityTypeConfiguration().Configure(modelBuilder.Entity<Account>());
-            new AttendanceEntityTypeConfiguration().Configure(modelBuilder.Entity<Attendance>());
-            new AttendanceArchiveEntityTypeConfiguration().Configure(modelBuilder.Entity<AttArchive>());
-            new AttendanceMachineEntityTypeConfiguration().Configure(modelBuilder.Entity<AttMachine>());
+            new EmployeeConfiguration().Configure(modelBuilder.Entity<Employee>());
+            new DepartmentConfiguration().Configure(modelBuilder.Entity<Department>());
+            new AccountConfiguration().Configure(modelBuilder.Entity<Account>());
+            new AttendanceConfiguration().Configure(modelBuilder.Entity<Attendance>());
+            new AttendanceRequestConfiguration().Configure(modelBuilder.Entity<AttendanceRequest>());
+            new MachineConfiguration().Configure(modelBuilder.Entity<Machine>());
+            new RoleConfiguration().Configure(modelBuilder.Entity<Role>());
+            new CompanySetupConfiguration().Configure(modelBuilder.Entity<CompanySetup>());
         }
 
-        public DbSet<User> Users { get; set; }
+        public DbSet<Employee> Employees { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Attendance> Attendances { get; set; }
-        public DbSet<AttArchive> Archives { get; set; }
-        public DbSet<AttMachine> Machines { get; set; }
+        public DbSet<AttendanceRequest> AttendanceRequests { get; set; }
+        public DbSet<Machine> Machines { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<CompanySetup> CompanySetup { get; set; }
     }
 }

@@ -17,14 +17,9 @@ namespace back_end.Services.Attendance
             _attendanceRepository.Add(attendance);
         }
 
-        public IQueryable<Models.Attendance> GetLastWeekLog()
-        {
-            return _attendanceRepository.GetDeletedByFilter(x => x.CheckDate.Date <= DateTime.Now.AddDays(-7));
-        }
-
         public IQueryable<Models.Attendance> GetDailyLog()
         {
-            return _attendanceRepository.GetByFilter(x => x.CheckDate.Date == DateTime.Today);
+            return _attendanceRepository.GetByFilter(x => x.checkDate.Date == DateTime.Today);
         }
 
         public void AddLog(IEnumerable<Models.Attendance> Log)
@@ -35,11 +30,6 @@ namespace back_end.Services.Attendance
         public void DeleteLog(IEnumerable<Models.Attendance> Log)
         {
             _attendanceRepository.DeleteRange(Log);
-        }
-
-        public void HardDeleteLog(IEnumerable<Models.Attendance> Log)
-        {
-            _attendanceRepository.HardDeleteRange(Log);
         }
 
         public void SaveChanges()

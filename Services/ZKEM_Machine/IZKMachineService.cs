@@ -2,11 +2,12 @@
 
 namespace back_end.Services.ZKEM_Machine
 {
-    public interface IMachineService
+    public interface IZKMachineService
     {
-        void setDeviceNetwork(string deviceIp, int devicePort);
+        void setDeviceNetwork(Machine machine);
         bool isConnected();
         List<Models.Attendance> GetDailyAttendanceRecords();
         int GetLastError();
+        void Dispose();
     }
 }

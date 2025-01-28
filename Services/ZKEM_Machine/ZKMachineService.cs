@@ -1,8 +1,5 @@
-﻿using back_end.Data;
-using back_end.Models;
-using System.Linq;
+﻿using back_end.Models;
 using zkemkeeper;
-using System.Runtime.InteropServices;
 using back_end.Repositories;
 using back_end.Services.Attendance;
 using System.Timers;
@@ -12,13 +9,12 @@ using back_end.Hubs;
 
 namespace back_end.Services.ZKEM_Machine
 {
-    public class MachineService : IMachineService
+    public class ZKMachineService : IZKMachineService
     {
         private IServiceScopeFactory _serviceScopeFactory;
         private IHubContext<AttendanceHub> _attendancehubContext;
 
-        private string _deviceIp;
-        private int _devicePort;
+        private Machine currentMachine;
 
         private CZKEM _zkemKeeper;
         public bool _isConnected;
@@ -27,7 +23,7 @@ namespace back_end.Services.ZKEM_Machine
         public int TimerInterval;
         public System.Timers.Timer zkTimer1;
 
-        public MachineService(IServiceScopeFactory serviceScopeFactory, IHubContext<AttendanceHub> attendancehubContext)
+        public ZKMachineService(IServiceScopeFactory serviceScopeFactory, IHubContext<AttendanceHub> attendancehubContext)
         {
             _zkemKeeper = new CZKEM();
             _isConnected = false;
@@ -40,10 +36,9 @@ namespace back_end.Services.ZKEM_Machine
             zkTimer1 = new System.Timers.Timer(TimerInterval);
         }
 
-        public void setDeviceNetwork(string deviceIp, int devicePort)
+        public void setDeviceNetwork(Machine machine)
         {
-            _deviceIp = deviceIp;
-            _devicePort = devicePort;
+            currentMachine = machine;
             Connect();
         }
 
@@ -54,7 +49,7 @@ namespace back_end.Services.ZKEM_Machine
 
         private void Connect()
         {
-            _isConnected = _zkemKeeper.Connect_Net(_deviceIp, _devicePort);
+            _isConnected = _zkemKeeper.Connect_Net(currentMachine.machineIp, currentMachine.machinePort);
 
             RegisterEvents();
         }
@@ -117,44 +112,44 @@ namespace back_end.Services.ZKEM_Machine
 
             Models.Attendance attendance = new Models.Attendance
             {
-                UserId = EnrollNumber,
-                VerifyMode = (Constants.Enums.VerifyMode)VerifyMethod,
-                CheckType = (Constants.Enums.CheckType)AttState,
-                CheckDate = checkDate,
+                machineCode = currentMachine.machineCode,
+                employeeId = EnrollNumber,
+                verifyMode = (VerifyMode)VerifyMethod,
+                checkType = (CheckType)AttState,
+                checkDate = checkDate,
+                latitude = 0,
+                longitude = 0
             };
 
             using(var scope = _serviceScopeFactory.CreateScope())
             {
-                var attendanceService = scope.ServiceProvider.GetRequiredService<IAttendanceService>();
-                var userRepository = scope.ServiceProvider.GetRequiredService<IRepository<User>>();
-                //var attendanceHub = scope.ServiceProvider.GetRequiredService<IHubContext<AttendanceHub>>();
+                var attendanceService = scope.ServiceProvider.GetRequiredService<IAttendanceRequestService>();
+                var userRepository = scope.ServiceProvider.GetRequiredService<IRepository<Employee>>();
                     
-                var user = userRepository.GetById(attendance.UserId).FirstOrDefault();
+                var user = userRepository.GetByFilter(x => x.employeeId == attendance.employeeId).FirstOrDefault();
 
                 if (user != null)
                 {
-                    switch (attendance.CheckType)
+                    switch (attendance.checkType)
                     {
                         case CheckType.CheckIn:
-                            user.IsCheckedIn = true;
+                            user.isCheckedIn = true;
                             userRepository.Update(user);
                             break;
 
                         case CheckType.CheckOut:
-                            user.IsCheckedIn = false;
+                            user.isCheckedIn = false;
                             userRepository.Update(user);    
                             break;
                     }
                 }
 
+                _attendancehubContext.Clients.Group("Admins").SendAsync("NewAttendance", attendance);
+
                 userRepository.SaveChanges();
 
                 attendanceService.AddAttendance(attendance);
                 attendanceService.SaveChanges();
-
-                //attendanceHub.Clients.Group("Admins").SendAsync("NewAttendance", attendance);
-                var userDTO = new { attendance.UserId, attendance.User.IsCheckedIn };
-                _attendancehubContext.Clients.Group("Admins").SendAsync("NewAttendance", userDTO);
             }
         }
 
@@ -188,13 +183,13 @@ namespace back_end.Services.ZKEM_Machine
                     {
                         Models.Attendance userAttendance = new Models.Attendance
                         {
-                            UserId = enrollNumber,
-                            VerifyMode = (Constants.Enums.VerifyMode)verifyMode,
-                            CheckType = (Constants.Enums.CheckType)inOutMode,
-                            CheckDate = new DateTime(yearValue, monthValue, day, hour, minute, 0),
+                            employeeId = enrollNumber,
+                            verifyMode = (VerifyMode)verifyMode,
+                            checkType = (CheckType)inOutMode,
+                            checkDate = new DateTime(yearValue, monthValue, day, hour, minute, 0),
                         };
 
-                        if (!logs.Any(log => log.CheckDate == userAttendance.CheckDate))
+                        if (!logs.Any(log => log.checkDate == userAttendance.checkDate))
                         {
                             logs.Add(userAttendance);
                         }
@@ -236,7 +231,7 @@ namespace back_end.Services.ZKEM_Machine
             }
         }
 
-        ~MachineService()
+        ~ZKMachineService()
         {
             Dispose();
         }

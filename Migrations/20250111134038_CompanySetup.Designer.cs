@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using back_end.Data;
 
@@ -11,9 +12,11 @@ using back_end.Data;
 namespace back_end.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250111134038_CompanySetup")]
+    partial class CompanySetup
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -94,46 +97,6 @@ namespace back_end.Migrations
                     b.HasIndex("machineCode");
 
                     b.ToTable("Attendances");
-                });
-
-            modelBuilder.Entity("back_end.Models.AttendanceRequest", b =>
-                {
-                    b.Property<int>("requestId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("requestId"));
-
-                    b.Property<int>("accountId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("checkDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("checkType")
-                        .HasColumnType("int");
-
-                    b.Property<string>("description")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.Property<decimal>("latitude")
-                        .HasPrecision(9, 6)
-                        .HasColumnType("decimal(9,6)");
-
-                    b.Property<decimal>("longitude")
-                        .HasPrecision(9, 6)
-                        .HasColumnType("decimal(9,6)");
-
-                    b.Property<int>("status")
-                        .HasColumnType("int");
-
-                    b.HasKey("requestId");
-
-                    b.HasIndex("accountId");
-
-                    b.ToTable("AttendanceRequests");
                 });
 
             modelBuilder.Entity("back_end.Models.CompanySetup", b =>
@@ -331,17 +294,6 @@ namespace back_end.Migrations
                     b.Navigation("machine");
                 });
 
-            modelBuilder.Entity("back_end.Models.AttendanceRequest", b =>
-                {
-                    b.HasOne("back_end.Models.Account", "account")
-                        .WithMany("attendanceRequests")
-                        .HasForeignKey("accountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("account");
-                });
-
             modelBuilder.Entity("back_end.Models.CompanySetup", b =>
                 {
                     b.HasOne("back_end.Models.Employee", "chairman")
@@ -362,11 +314,6 @@ namespace back_end.Migrations
                         .IsRequired();
 
                     b.Navigation("department");
-                });
-
-            modelBuilder.Entity("back_end.Models.Account", b =>
-                {
-                    b.Navigation("attendanceRequests");
                 });
 
             modelBuilder.Entity("back_end.Models.Department", b =>

@@ -10,10 +10,10 @@ using back_end.Services.Token;
 using back_end.Services.Location;
 using back_end.Services.ZKEM_Machine;
 using back_end.Profiles;
-using back_end.Mediators.Attendance;
 using back_end.Services.Attendance;
 using back_end.Services;
 using back_end.Hubs;
+using back_end.Mediators.Machines;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,15 +38,18 @@ builder.Services.AddCors();
 // Add Custom Services
 builder.Services.AddSingleton<ITokenService, TokenService>();
 builder.Services.AddSingleton<ILocationService, LocationService>();
-builder.Services.AddSingleton<IMachineService, MachineService>();
+builder.Services.AddScoped<IZKMachineService, ZKMachineService>();
 builder.Services.AddScoped(typeof(IRepository<>),typeof(Repository<>));
-builder.Services.AddScoped<IAttendanceMediator, AttendanceMediator>();
+builder.Services.AddSingleton<IMachinesMediator, MachinesMediator>();
 builder.Services.AddScoped<IAttendanceService, AttendanceService>();
+builder.Services.AddScoped<IAttendanceRequestService, AttendanceRequestService>();
 
 builder.Services.AddHostedService<AppActionService>();
 
-builder.Services.AddAutoMapper(typeof(AttendanceMappingProfile));
+builder.Services.AddAutoMapper(typeof(MachineMappingProfile));
+builder.Services.AddAutoMapper(typeof(CompanySetupMappingProfile));
 builder.Services.AddAutoMapper(typeof(AccountMappingProfile));
+builder.Services.AddAutoMapper(typeof(AttendanceMappingProfile));
 
 // Add authentication
 builder.Services.AddAuthentication(options =>

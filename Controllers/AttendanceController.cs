@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using back_end.Services;
 using back_end.Services.Location;
-using back_end.Mediators.Attendance;
 using back_end.Services.ZKEM_Machine;
 using back_end.Services.Attendance;
 using back_end.Repositories;
@@ -16,115 +15,103 @@ using back_end.Constants.Enums;
 
 namespace back_end.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class AttendanceController : ControllerBase
     {
-        //private ILocationService _locationService;
-        //private IAttendanceMediator _attendanceMediator;
-        //private IAttendanceService _attendanceService;
-        //private IMachineService _machineService;
-        //private IRepository<Account> _accountRepository;
+        private ILocationService _locationService;
+        private IAttendanceService _attendanceService;
+        private IZKMachineService _zkMachineService;
+        private IRepository<Employee> _employeeRepository;
 
-        //public AttendanceController(ILocationService locationService, IAttendanceMediator attendanceMediator, IMachineService machineService, IAttendanceService attendanceService, IRepository<Account> accountRepository)
-        //{
-        //    _locationService = locationService;
-        //    _attendanceMediator = attendanceMediator;
-        //    _machineService = machineService;
-        //    _attendanceService = attendanceService;
-        //    _accountRepository = accountRepository;
-        //}
+        public AttendanceController(ILocationService locationService, IZKMachineService zkMachineService, IAttendanceService attendanceService, IRepository<Employee> employeeRepository)
+        {
+            _locationService = locationService;
+            _zkMachineService = zkMachineService;
+            _attendanceService = attendanceService;
+            _employeeRepository = employeeRepository;
+        }
+
+        [HttpGet("Get-Daily-Log")]
+        public ActionResult<IEnumerable<Attendance>> GetDailyAttendanceLog()
+        {
+            return Ok(_attendanceService.GetDailyLog().ToList());
+        }
 
         //[HttpPost("check-in")]
         //[Authorize]
         //public ActionResult<Attendance> CheckIn(LocationDTO locationDTO)
         //{
-        //    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        //    var employeeId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        //    if (userId == null)
+        //    if (employeeId == null)
         //    {
-        //        return Unauthorized("User ID could not be found.");
+        //        return Unauthorized("Employee ID not found.");
         //    }
 
-        //    var Account = _accountRepository.GetByFilter(x => x.UserId == int.Parse(userId)).FirstOrDefault(); // Find user by ID
+        //    var employee = _employeeRepository.GetByFilter(x => x.employeeId == int.Parse(employeeId)).FirstOrDefault();
 
-        //    if (Account == null)
-        //    {
-        //        return BadRequest("This User Account Is Not Found");
-        //    }
-
-        //    if (Account.IsCheckedIn)
+        //    if (employee.isCheckedIn)
         //    {
         //        return BadRequest("This User Account Is Already Checked In");
         //    }
 
-        //    if (!_locationService.IsLocationSet())
-        //    {
-        //        return BadRequest("Company Location Is Not Set, Wait For Admin To Proceed");
-        //    }
-
-        //    bool isInCompanyArea = _locationService.IsWithinCompanyArea(locationDTO.Latitude, locationDTO.Longitude);
-
-        //    if (!isInCompanyArea)
-        //    {
-        //        return BadRequest("You Must Be Within The Company Area To Check In");
-        //    }
-
         //    var userAttendance = new Attendance
         //    {
-        //        UserId = int.Parse(userId),
-        //        VerifyMode = VerifyMode.Website,
-        //        CheckType = CheckType.CheckIn,
-        //        CheckDate = DateTime.Now,
+        //        machineCode = 0,
+        //        employeeId = int.Parse(employeeId),
+        //        verifyMode = VerifyMode.Website,
+        //        checkType = CheckType.CheckIn,
+        //        checkDate = DateTime.Now,
+        //        latitude = (decimal)locationDTO.Latitude,
+        //        longitude = (decimal)locationDTO.Longitude
         //    };
 
         //    _attendanceService.AddAttendance(userAttendance);
-        //    Account.IsCheckedIn = true;
-        //    _accountRepository.Update(Account);
-        //    _accountRepository.SaveChanges();
+        //    employee.isCheckedIn = true;
+        //    _employeeRepository.Update(employee);
+        //    _employeeRepository.SaveChanges();
         //    _attendanceService.SaveChanges();
 
         //    return Ok(userAttendance);
         //}
 
-        //[HttpPost("check-out")]
-        //[Authorize]
-        //public ActionResult<Attendance> CheckOut(LocationDTO locationDTO)
-        //{
-        //    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        [HttpPost("check-out")]
+        [Authorize]
+        public ActionResult<Attendance> CheckOut(LocationDTO locationDTO)
+        {
+            var employeeId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        //    if (userId == null)
-        //    {
-        //        return Unauthorized("User ID could not be found.");
-        //    }
+            if (employeeId == null)
+            {
+                return Unauthorized("Employee ID could not be found.");
+            }
 
-        //    var Account = _accountRepository.GetByFilter(x => x.UserId == int.Parse(userId)).FirstOrDefault();
+            var employee = _employeeRepository.GetByFilter(x => x.employeeId == int.Parse(employeeId)).FirstOrDefault();
 
-        //    if (Account == null)
-        //    {
-        //        return BadRequest("This User Account Is Not Found");
-        //    }
+            if (!employee.isCheckedIn)
+            {
+                return BadRequest("Account is not checked in");
+            }
 
-        //    if (!Account.IsCheckedIn)
-        //    {
-        //        return BadRequest("This User Account Is Not Checked In");
-        //    }
+            var userAttendance = new Attendance
+            {
+                machineCode = 0,
+                employeeId = int.Parse(employeeId),
+                verifyMode = VerifyMode.Website,
+                checkType = CheckType.CheckOut,
+                checkDate = DateTime.Now,
+                latitude = (decimal)locationDTO.Latitude,
+                longitude = (decimal)locationDTO.Longitude
+            };
 
-        //    var userAttendance = new Attendance
-        //    {
-        //        UserId = int.Parse(userId),
-        //        VerifyMode = VerifyMode.Website,
-        //        CheckType = CheckType.CheckOut,
-        //        CheckDate = DateTime.Now,
-        //    };
+            _attendanceService.AddAttendance(userAttendance);
+            employee.isCheckedIn = false;
+            _employeeRepository.Update(employee);
+            _employeeRepository.SaveChanges();
+            _attendanceService.SaveChanges();
 
-        //    _attendanceService.AddAttendance(userAttendance);
-        //    Account.IsCheckedIn = false;
-        //    _accountRepository.Update(Account);
-        //    _accountRepository.SaveChanges();
-        //    _attendanceService.SaveChanges();
-
-        //    return Ok(userAttendance);
-        //}
+            return Ok(userAttendance);
+        }
     }
 }

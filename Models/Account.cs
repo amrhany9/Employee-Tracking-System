@@ -1,15 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace back_end.Models
 {
-    public class Account : BaseModel
+    public class Account
     {
-        public int UserId { get; set; }
-        public string UserName { get; set; }
-        public string Password { get; set; }
-        public String Role { get; set; } // "Admin" or "Employee"
+        public int accountId { get; set; }
+        public int employeeId { get; set; }
+        public string username { get; set; }
+        public string password { get; set; }
+        public int roleId { get; set; }
 
-        public User User { get; set; }
+        public Role role { get; set; }
+        public Employee employee { get; set; }
     }
 }

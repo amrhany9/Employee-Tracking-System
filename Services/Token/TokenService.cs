@@ -19,9 +19,8 @@ namespace back_end.Services.Token
         {
             var claims = new List<Claim>()
             {
-                new Claim(ClaimTypes.NameIdentifier, Account.UserId.ToString()),
-                new Claim(ClaimTypes.Name, Account.UserName),
-                new Claim(ClaimTypes.Role, Account.Role)
+                new Claim(ClaimTypes.NameIdentifier, Account.employeeId.ToString()),
+                new Claim(ClaimTypes.Role, Account.role.roleNameEn)
             };
 
             var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256);

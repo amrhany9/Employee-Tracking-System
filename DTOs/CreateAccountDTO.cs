@@ -2,9 +2,10 @@
 {
     public class CreateAccountDTO
     {
-        public int UserId { get; set; }
-        public string UserName { get; set; }
-        public string Password { get; set; }
-        public String Role { get; set; }
+        public int userId { get; set; }
+        public int employeeId { get; set; }
+        public string username { get; set; }
+        public string password { get; set; }
+        public int roleId { get; set; }
     }
 }
