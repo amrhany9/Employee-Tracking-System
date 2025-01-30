@@ -123,7 +123,7 @@ namespace back_end.Services.ZKEM_Machine
 
             using(var scope = _serviceScopeFactory.CreateScope())
             {
-                var attendanceService = scope.ServiceProvider.GetRequiredService<IAttendanceRequestService>();
+                var attendanceService = scope.ServiceProvider.GetRequiredService<IAttendanceService>();
                 var userRepository = scope.ServiceProvider.GetRequiredService<IRepository<Employee>>();
                     
                 var user = userRepository.GetByFilter(x => x.employeeId == attendance.employeeId).FirstOrDefault();

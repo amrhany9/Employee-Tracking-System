@@ -23,7 +23,7 @@ namespace back_end.Controllers
             _machinesMediator = machinesMediator;
         }
 
-        [HttpGet]
+        [HttpGet("All")]
         public ActionResult GetAllMachines()
         {
             var machines = _machinesMediator.GetAllMachines();

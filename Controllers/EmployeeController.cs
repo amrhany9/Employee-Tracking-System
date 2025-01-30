@@ -17,7 +17,7 @@ namespace back_end.Controllers
             _employeeRepository = employeeRepository;
         }
 
-        [HttpGet]
+        [HttpGet("All")]
         public ActionResult<IEnumerable<Employee>> GetEmployees()
         {
             return Ok(_employeeRepository.GetAll().ToList());
@@ -45,27 +45,5 @@ namespace back_end.Controllers
 
             return Ok(employee);
         }
-
-        [HttpGet("department/{departmentId}")]
-        public async Task<IActionResult> GetEmployeesByDepartment(int departmentId, int pageNumber = 1, int pageSize = 10)
-        {
-            var employeesQuery = _employeeRepository.GetByFilter(u => u.departmentId == departmentId).AsQueryable();
-
-            var employeesPaged = await employeesQuery
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-
-            var totalemployees = await employeesQuery.CountAsync(); 
-
-            var result = new
-            {
-                employees = employeesPaged,
-                totalCount = totalemployees
-            };
-
-            return Ok(result);
-        }
-
     }
 }

@@ -17,9 +17,19 @@ namespace back_end.Services.Attendance
             _attendanceRepository.Add(attendance);
         }
 
+        public IQueryable<Models.Attendance> GetLogByMachineCode(int machineCode)
+        {
+            return _attendanceRepository.GetByFilter(x => x.machineCode == machineCode);
+        }
+
         public IQueryable<Models.Attendance> GetDailyLog()
         {
             return _attendanceRepository.GetByFilter(x => x.checkDate.Date == DateTime.Today);
+        }
+
+        public IQueryable<Models.Attendance> GetDailyLogByMachineCode(int machineCode)
+        {
+            return _attendanceRepository.GetByFilter(x => x.checkDate.Date == DateTime.Today && x.machineCode == machineCode);
         }
 
         public void AddLog(IEnumerable<Models.Attendance> Log)

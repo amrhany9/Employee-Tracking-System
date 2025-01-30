@@ -2,6 +2,7 @@
 using back_end.Constants.Enums;
 using back_end.Data;
 using back_end.Hubs;
+using back_end.Migrations;
 using back_end.Models;
 using back_end.Repositories;
 using back_end.ViewModels.AttendanceRequest;
@@ -91,8 +92,9 @@ namespace back_end.Services.Attendance
 
                 _attendanceRequestsRepository.Update(request);
                 _attendanceRequestsRepository.SaveChanges();
-
                 transaction.Commit();
+
+                _attendanceHubContext.Clients.Group("Admins").SendAsync("ApprovedAttendanceRequest", requestId);
 
                 return true;
             }
@@ -123,6 +125,8 @@ namespace back_end.Services.Attendance
                 _attendanceRequestsRepository.SaveChanges();
 
                 transaction.Commit();
+
+                _attendanceHubContext.Clients.Group("Admins").SendAsync("DeclinedAttendanceRequest", requestId);
 
                 return true;
             }

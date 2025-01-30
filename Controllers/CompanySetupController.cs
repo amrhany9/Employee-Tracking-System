@@ -25,8 +25,8 @@ namespace back_end.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
-        public ActionResult GetCompanySetup()
+        [HttpGet("All")]
+        public ActionResult GetCompanySetups()
         {
             var currentCompanySetup = _companySetupRepository.GetAll().ToList();
             return Ok(currentCompanySetup);

@@ -25,7 +25,7 @@ namespace back_end.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost("Login")] // POST : api/account/login
+        [HttpPost("Login")]
         public ActionResult Login(LoginDTO loginDTO)
         {
             try
@@ -54,7 +54,7 @@ namespace back_end.Controllers
             }
         }
 
-        [HttpPost("Register-Account")]
+        [HttpPost("Register")]
         public ActionResult RegisterAccount(CreateAccountDTO accountDTO)
         {
             if (accountDTO == null)
