@@ -9,18 +9,25 @@ namespace back_end.Services.Token
     public class TokenService : ITokenService
     {
         private readonly SymmetricSecurityKey _key;
+        private readonly IConfiguration _config;
 
         public TokenService(IConfiguration config)
         {
+            _config = config;
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
         }
 
-        public string GenerateToken(Account Account)
+        public string GenerateToken(Account account)
         {
+            if (account == null || account.role == null)
+            {
+                throw new ArgumentNullException(nameof(account), "Account or Role cannot be null");
+            }
+                
             var claims = new List<Claim>()
             {
-                new Claim(ClaimTypes.NameIdentifier, Account.employeeId.ToString()),
-                new Claim(ClaimTypes.Role, Account.role.roleNameEn)
+                new Claim(ClaimTypes.NameIdentifier, account.employeeId.ToString()),
+                new Claim(ClaimTypes.Role, account.role.roleNameEn)
             };
 
             var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256);
@@ -38,5 +45,33 @@ namespace back_end.Services.Token
 
             return tokenHandler.WriteToken(token);
         }
+
+        public bool ValidateToken(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            try
+            {
+                tokenHandler.ValidateToken(token, new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = _key,
+                    ValidateIssuer = true,
+                    ValidIssuer = _config["Jwt:Issuer"],
+                    ValidateAudience = true,
+                    ValidAudience = _config["Jwt:Audience"],
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero
+                }, out _);
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }
+
+    

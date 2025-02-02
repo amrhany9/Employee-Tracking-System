@@ -6,5 +6,6 @@ namespace back_end.Services.Token
     public interface ITokenService
     {
         string GenerateToken(Account userAccount);
+        bool ValidateToken(string token);
     }
 }

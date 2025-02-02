@@ -23,15 +23,7 @@ namespace back_end.Controllers
             return Ok(_employeeRepository.GetAll().ToList());
         }
 
-        [HttpGet("{employeeId}")]
-        public ActionResult<Employee> GetEmployeeById(int employeeId)
-        {
-            var employee = _employeeRepository.GetByFilter(x => x.employeeId == employeeId).FirstOrDefault();
-
-            return Ok(employee);
-        }
-
-        [HttpGet("me")]
+        [HttpGet]
         public ActionResult<Employee> GetEmployeeByToken()
         {
             var employeeId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -41,6 +33,19 @@ namespace back_end.Controllers
             if (employee == null)
             {
                 return NotFound();
+            }
+
+            return Ok(employee);
+        }
+
+        [HttpGet("{employeeId}")]
+        public ActionResult<Employee> GetEmployeeById(int employeeId)
+        {
+            var employee = _employeeRepository.GetByFilter(x => x.employeeId == employeeId).FirstOrDefault();
+
+            if (employee == null)
+            {
+                return NotFound("Employee not found");
             }
 
             return Ok(employee);
