@@ -9,7 +9,7 @@ namespace back_end.Profiles
     {
         public AttendanceMappingProfile()
         {
-            CreateMap<AttendanceRequestViewModel, AttendanceRequest>().ReverseMap();
+            CreateMap<AttendanceRequestCreateViewModel, AttendanceRequest>().ReverseMap();
 
             CreateMap<AttendanceRequest, Attendance>();
         }

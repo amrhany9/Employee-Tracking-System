@@ -10,6 +10,8 @@ namespace back_end.Models
         public int employeeId { get; set; }
         public string username { get; set; }
         public string password { get; set; }
+        public string? refreshToken { get; set; }
+        public DateTime? refreshTokenExpiry { get; set; }
         public int roleId { get; set; }
 
         public Role role { get; set; }

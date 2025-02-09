@@ -16,7 +16,8 @@ namespace back_end.Controllers
             _attendanceRequestService = attendanceRequestService;
         }
 
-        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        [HttpGet("Pending")]
         public ActionResult GetPendingRequests()
         {
             var pendingRequests = _attendanceRequestService.GetPendingRequests();
@@ -26,9 +27,9 @@ namespace back_end.Controllers
 
         [Authorize]
         [HttpPost("Submit")]
-        public ActionResult SubmitRequest(AttendanceRequestViewModel requestViewModel)
+        public ActionResult SubmitRequest(AttendanceRequestCreateViewModel requestCreateViewModel)
         {
-            var isSuccess = _attendanceRequestService.SubmitRequest(requestViewModel);
+            var isSuccess = _attendanceRequestService.SubmitRequest(requestCreateViewModel);
 
             if (isSuccess)
             {

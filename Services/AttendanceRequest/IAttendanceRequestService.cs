@@ -5,8 +5,8 @@ namespace back_end.Services.Attendance
 {
     public interface IAttendanceRequestService
     {
-        List<AttendanceRequestViewModel> GetPendingRequests();
-        bool SubmitRequest(AttendanceRequestViewModel requestViewModel);
+        List<AttendanceRequest> GetPendingRequests();
+        bool SubmitRequest(AttendanceRequestCreateViewModel requestViewModel);
         bool ApproveRequest(int requestId);
         bool DeclineRequest(int requestId);
     }

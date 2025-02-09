@@ -5,7 +5,8 @@ namespace back_end.Services.Token
 {
     public interface ITokenService
     {
-        string GenerateToken(Account userAccount);
+        string GenerateJwtToken(Account userAccount);
+        string GenerateRefreshToken();
         bool ValidateToken(string token);
     }
 }

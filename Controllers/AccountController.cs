@@ -5,6 +5,7 @@ using back_end.Repositories;
 using back_end.Services.Token;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace back_end.Controllers
 {
@@ -44,15 +45,62 @@ namespace back_end.Controllers
                     return Unauthorized(new { message = "Invalid credentials" });
                 }
 
-                var token = _tokenService.GenerateToken(account);
+                var accessToken = _tokenService.GenerateJwtToken(account);
+                var refreshToken = _tokenService.GenerateRefreshToken();
 
-                return Ok(new { token = token, roleId = account.roleId, roleName = account.role.roleNameEn});
+                account.refreshToken = refreshToken;
+                account.refreshTokenExpiry = DateTime.UtcNow.AddDays(7);
+
+                _accountRepository.SaveChanges();
+
+                return Ok(new { accessToken = accessToken, refreshToken = refreshToken});
             }
             catch (Exception ex) 
             {
                 return StatusCode(500, new { message = $"An error occurred while processing your request: {ex}" });
             }
         }
+
+        [HttpPost("Refresh")]
+        public ActionResult RefreshToken(string refreshToken)
+        {
+            var account = _accountRepository.GetByFilter(a => a.refreshToken == refreshToken).SingleOrDefault();
+            if (account == null || account.refreshTokenExpiry < DateTime.UtcNow)
+                return Unauthorized("Invalid or expired refresh token");
+
+            var newAccessToken = _tokenService.GenerateJwtToken(account);
+            var newRefreshToken = _tokenService.GenerateRefreshToken();
+
+            account.refreshToken = newRefreshToken;
+            account.refreshTokenExpiry = DateTime.UtcNow.AddDays(7);
+            _accountRepository.SaveChanges();
+
+            return Ok(new { accessToken = newAccessToken, refreshToken = newRefreshToken });
+        }
+
+
+        [HttpPost("Logout")]
+        public ActionResult Logout()
+        {
+            var employeeId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(employeeId))
+            {
+                return Unauthorized("User not found");
+            }
+
+            var account = _accountRepository
+                .GetByFilter(a => a.employeeId == int.Parse(employeeId))
+                .SingleOrDefault();
+
+            if (account == null) return NotFound();
+
+            account.refreshToken = null;
+            account.refreshTokenExpiry = null;
+            _accountRepository.SaveChanges();
+
+            return Ok("Logged out successfully");
+        }
+
 
         [HttpPost("Register")]
         public ActionResult RegisterAccount(CreateAccountDTO accountDTO)

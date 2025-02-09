@@ -45,15 +45,15 @@ namespace back_end.Controllers
             return Ok(currentCompanySetup);
         }
 
-        //[HttpPost]
-        //public ActionResult CreateCompanySetup(CompanySetupCreateViewModel createCompanySetup)
-        //{
-        //    var companySetup = _mapper.Map<CompanySetup>(createCompanySetup);
-        //    _companySetupRepository.Add(companySetup);
-        //    _companySetupRepository.SaveChanges();
+        [HttpPost]
+        public ActionResult CreateCompanySetup(CompanySetupCreateViewModel createCompanySetup)
+        {
+            var companySetup = _mapper.Map<CompanySetup>(createCompanySetup);
+            _companySetupRepository.Add(companySetup);
+            _companySetupRepository.SaveChanges();
 
-        //    return Ok(companySetup);
-        //}
+            return Ok(companySetup);
+        }
 
         [HttpPut("{companySetupId}")]
         public ActionResult UpdateCompanySetup(int companySetupId, CompanySetupUpdateViewModel updateCompanySetup)

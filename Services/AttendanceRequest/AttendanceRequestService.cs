@@ -29,16 +29,16 @@ namespace back_end.Services.Attendance
             _mapper = mapper;
         }
 
-        public List<AttendanceRequestViewModel> GetPendingRequests()
+        public List<AttendanceRequest> GetPendingRequests()
         {
             var pendingRequests = _attendanceRequestsRepository
                 .GetByFilter(x => x.status == RequestStatus.Pending)
                 .ToList();
 
-            return _mapper.Map<List<AttendanceRequestViewModel>>(pendingRequests);
+            return pendingRequests;
         }
 
-        public bool SubmitRequest(AttendanceRequestViewModel requestViewModel)
+        public bool SubmitRequest(AttendanceRequestCreateViewModel requestViewModel)
         {
             var attendanceRequest = _mapper.Map<AttendanceRequest>(requestViewModel);
 

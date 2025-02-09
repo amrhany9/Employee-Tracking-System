@@ -2,9 +2,9 @@
 
 namespace back_end.ViewModels.AttendanceRequest
 {
-    public class AttendanceRequestViewModel
+    public class AttendanceRequestCreateViewModel
     {
-        public int accountId { get; set; }
+        public int employeeId { get; set; }
         public CheckType checkType { get; set; }
         public DateTime checkDate { get; set; }
         public Decimal latitude { get; set; }
