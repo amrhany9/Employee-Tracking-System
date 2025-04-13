@@ -24,9 +24,9 @@ namespace back_end.Services.Location
             return _companyLatitude != 0 && _companyLongitude != 0 ;
         }
 
-        private double CalculateDistance(double UserLatitude, double UserLongitude)
+        public double CalculateDistance(double UserLatitude, double UserLongitude)
         {
-            var R = 6371000; // Radius of the Earth in meters
+            var R = 6371000;
             var latRad1 = _companyLatitude * Math.PI / 180;
             var latRad2 = UserLatitude * Math.PI / 180;
             var deltaLat = (UserLatitude - _companyLatitude) * Math.PI / 180;
@@ -38,7 +38,7 @@ namespace back_end.Services.Location
 
             var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
 
-            return R * c; // Distance in meters
+            return R * c;
         }
     }
 }

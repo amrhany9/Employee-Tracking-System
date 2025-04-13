@@ -6,5 +6,6 @@ namespace back_end.Services.Location
     {
         void setCompanyCoordinates(CompanySetup companySetup);
         bool IsLocationSet();
+        double CalculateDistance(double UserLatitude, double UserLongitude);
     }
 }

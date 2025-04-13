@@ -7,6 +7,7 @@ using back_end.Models;
 using back_end.Repositories;
 using back_end.ViewModels.AttendanceRequest;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 
 namespace back_end.Services.Attendance
 {
@@ -29,11 +30,11 @@ namespace back_end.Services.Attendance
             _mapper = mapper;
         }
 
-        public List<AttendanceRequest> GetPendingRequests()
+        public async Task<IEnumerable<AttendanceRequest>> GetPendingRequests()
         {
-            var pendingRequests = _attendanceRequestsRepository
+            var pendingRequests = await _attendanceRequestsRepository
                 .GetByFilter(x => x.status == RequestStatus.Pending)
-                .ToList();
+                .ToListAsync();
 
             return pendingRequests;
         }
