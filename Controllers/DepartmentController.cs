@@ -28,7 +28,7 @@ namespace back_end.Controllers
         [HttpGet("Employees/{departmentId}")]
         public async Task<IActionResult> GetEmployeesByDepartmentId(int departmentId, int pageNumber = 1, int pageSize = 10)
         {
-            var employeesQuery = _employeeRepository.GetByFilter(u => u.departmentId == departmentId).AsQueryable();
+            var employeesQuery = _employeeRepository.GetByFilter(u => u.DepartmentId == departmentId).AsQueryable();
 
             var employeesPaged = await employeesQuery
                 .Skip((pageNumber - 1) * pageSize)

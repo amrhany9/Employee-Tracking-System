@@ -35,7 +35,7 @@ namespace back_end.Controllers
         [HttpGet("{companySetupId}")]
         public ActionResult GetCompanySetup(int companySetupId)
         {
-            var currentCompanySetup = _companySetupRepository.GetByFilter(x => x.companyId == companySetupId).FirstOrDefault();
+            var currentCompanySetup = _companySetupRepository.GetByFilter(x => x.Id == companySetupId).FirstOrDefault();
 
             if (currentCompanySetup == null)
             {
@@ -58,7 +58,7 @@ namespace back_end.Controllers
         [HttpPut("{companySetupId}")]
         public ActionResult UpdateCompanySetup(int companySetupId, CompanySetupUpdateViewModel updateCompanySetup)
         {
-            var currentCompanySetup = _companySetupRepository.GetByFilter(x => x.companyId == companySetupId).FirstOrDefault();
+            var currentCompanySetup = _companySetupRepository.GetByFilter(x => x.Id == companySetupId).FirstOrDefault();
             currentCompanySetup = _mapper.Map(updateCompanySetup, currentCompanySetup);
 
             _companySetupRepository.Update(currentCompanySetup);

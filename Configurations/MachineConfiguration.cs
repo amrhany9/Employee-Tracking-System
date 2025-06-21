@@ -9,16 +9,16 @@ namespace back_end.Configurations
         public void Configure(EntityTypeBuilder<Machine> builder)
         {
             builder
-                .HasKey(x => x.machineCode);
+                .HasKey(x => x.Code);
 
-            builder.Property(x => x.machineName)
+            builder.Property(x => x.Name)
                 .HasMaxLength(50);
 
-            builder.Property(x => x.machineIp)
+            builder.Property(x => x.Ip)
                 .IsRequired()
                 .HasMaxLength(50);
 
-            builder.Property(x => x.machinePort)
+            builder.Property(x => x.Port)
                 .IsRequired();
         }
     }

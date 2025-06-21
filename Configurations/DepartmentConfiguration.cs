@@ -9,13 +9,13 @@ namespace back_end.Configurations
         public void Configure(EntityTypeBuilder<Department> builder)
         {
             builder
-                .HasKey(x => x.departmentId);
+                .HasKey(x => x.Id);
 
-            builder.Property(x => x.departmentNameEn)
+            builder.Property(x => x.NameEn)
                 .IsRequired()
                 .HasMaxLength(50);
 
-            builder.Property(x => x.departmentNameAr)
+            builder.Property(x => x.NameAr)
                 .IsUnicode(true)
                 .UseCollation("Arabic_CI_AS")
                 .HasMaxLength(50);

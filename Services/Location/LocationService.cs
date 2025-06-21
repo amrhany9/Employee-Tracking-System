@@ -9,14 +9,14 @@ namespace back_end.Services.Location
 
         public void setCompanyCoordinates(CompanySetup companySetup)
         {
-            if (companySetup.companyLatitude < -90 || companySetup.companyLatitude > 90)
-                throw new ArgumentOutOfRangeException(nameof(companySetup.companyLatitude), "Latitude must be between -90 and 90.");
+            if (companySetup.Latitude < -90 || companySetup.Latitude > 90)
+                throw new ArgumentOutOfRangeException(nameof(companySetup.Latitude), "Latitude must be between -90 and 90.");
 
-            if (companySetup.companyLongitude < -180 || companySetup.companyLongitude > 180)
-                throw new ArgumentOutOfRangeException(nameof(companySetup.companyLongitude), "Longitude must be between -180 and 180.");
+            if (companySetup.Longitude < -180 || companySetup.Longitude > 180)
+                throw new ArgumentOutOfRangeException(nameof(companySetup.Longitude), "Longitude must be between -180 and 180.");
 
-            _companyLatitude = (double)companySetup.companyLatitude;
-            _companyLongitude = (double)companySetup.companyLongitude;
+            _companyLatitude = (double)companySetup.Latitude;
+            _companyLongitude = (double)companySetup.Longitude;
         }
 
         public bool IsLocationSet()

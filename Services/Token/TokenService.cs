@@ -20,15 +20,15 @@ namespace back_end.Services.Token
 
         public string GenerateJwtToken(Account account)
         {
-            if (account == null || account.role == null)
+            if (account == null || account.Role == null)
             {
                 throw new ArgumentNullException(nameof(account), "Account or Role cannot be null");
             }
                 
             var claims = new List<Claim>()
             {
-                new Claim(ClaimTypes.NameIdentifier, account.employeeId.ToString()),
-                new Claim(ClaimTypes.Role, account.role.roleNameEn)
+                new Claim(ClaimTypes.NameIdentifier, account.EmployeeId.ToString()),
+                new Claim(ClaimTypes.Role, account.Role.NameEn)
             };
 
             var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256);

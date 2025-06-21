@@ -2,7 +2,6 @@
 using back_end.Constants.Enums;
 using back_end.Data;
 using back_end.Hubs;
-using back_end.Migrations;
 using back_end.Models;
 using back_end.Repositories;
 using back_end.ViewModels.AttendanceRequest;
@@ -33,7 +32,7 @@ namespace back_end.Services.Attendance
         public async Task<IEnumerable<AttendanceRequest>> GetPendingRequests()
         {
             var pendingRequests = await _attendanceRequestsRepository
-                .GetByFilter(x => x.status == RequestStatus.Pending)
+                .GetByFilter(x => x.Status == RequestStatus.Pending)
                 .ToListAsync();
 
             return pendingRequests;
@@ -65,14 +64,14 @@ namespace back_end.Services.Attendance
 
         public bool ApproveRequest(int requestId)
         {
-            var request = _attendanceRequestsRepository.GetByFilter(x => x.requestId == requestId).Single();
+            var request = _attendanceRequestsRepository.GetByFilter(x => x.Id == requestId).Single();
 
             if (request == null)
             {
                 return false;
             }
 
-            var employee = _employeeRepository.GetByFilter(x => x.employeeId == request.employeeId).Single();
+            var employee = _employeeRepository.GetByFilter(x => x.Id == request.EmployeeId).Single();
 
             if (employee == null)
             {
@@ -88,8 +87,8 @@ namespace back_end.Services.Attendance
                 _attendanceService.AddAttendance(attendance);
                 _attendanceService.SaveChanges();
 
-                request.status = RequestStatus.Approved;
-                request.employee.isCheckedIn = true;
+                request.Status = RequestStatus.Approved;
+                request.Employee.IsCheckedIn = true;
 
                 _attendanceRequestsRepository.Update(request);
                 _attendanceRequestsRepository.SaveChanges();
@@ -109,7 +108,7 @@ namespace back_end.Services.Attendance
 
         public bool DeclineRequest(int requestId)
         {
-            var request = _attendanceRequestsRepository.GetByFilter(x => x.requestId == requestId).Single();
+            var request = _attendanceRequestsRepository.GetByFilter(x => x.Id == requestId).Single();
 
             if (request == null)
             {
@@ -120,7 +119,7 @@ namespace back_end.Services.Attendance
 
             try
             {
-                request.status = RequestStatus.Declined;
+                request.Status = RequestStatus.Declined;
 
                 _attendanceRequestsRepository.Update(request);
                 _attendanceRequestsRepository.SaveChanges();

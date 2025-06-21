@@ -36,8 +36,8 @@ namespace back_end.Controllers
                     return BadRequest(new { message = "Username and password are required" });
                 }
 
-                var account = _accountRepository.GetByFilter(x => x.username == loginDTO.username && x.password == loginDTO.password)
-                    .Include(x => x.role)
+                var account = _accountRepository.GetByFilter(x => x.Username == loginDTO.username && x.Password == loginDTO.password)
+                    .Include(x => x.Role)
                     .FirstOrDefault();
 
                 if (account == null)
@@ -48,8 +48,8 @@ namespace back_end.Controllers
                 var accessToken = _tokenService.GenerateJwtToken(account);
                 var refreshToken = _tokenService.GenerateRefreshToken();
 
-                account.refreshToken = refreshToken;
-                account.refreshTokenExpiry = DateTime.UtcNow.AddDays(7);
+                account.RefreshToken = refreshToken;
+                account.RefreshTokenExpiry = DateTime.UtcNow.AddDays(7);
 
                 _accountRepository.SaveChanges();
 
@@ -64,15 +64,15 @@ namespace back_end.Controllers
         [HttpPost("Refresh")]
         public ActionResult RefreshToken(string refreshToken)
         {
-            var account = _accountRepository.GetByFilter(a => a.refreshToken == refreshToken).SingleOrDefault();
-            if (account == null || account.refreshTokenExpiry < DateTime.UtcNow)
+            var account = _accountRepository.GetByFilter(a => a.RefreshToken == refreshToken).SingleOrDefault();
+            if (account == null || account.RefreshTokenExpiry < DateTime.UtcNow)
                 return Unauthorized("Invalid or expired refresh token");
 
             var newAccessToken = _tokenService.GenerateJwtToken(account);
             var newRefreshToken = _tokenService.GenerateRefreshToken();
 
-            account.refreshToken = newRefreshToken;
-            account.refreshTokenExpiry = DateTime.UtcNow.AddDays(7);
+            account.RefreshToken = newRefreshToken;
+            account.RefreshTokenExpiry = DateTime.UtcNow.AddDays(7);
             _accountRepository.SaveChanges();
 
             return Ok(new { accessToken = newAccessToken, refreshToken = newRefreshToken });
@@ -89,13 +89,13 @@ namespace back_end.Controllers
             }
 
             var account = _accountRepository
-                .GetByFilter(a => a.employeeId == int.Parse(employeeId))
+                .GetByFilter(a => a.EmployeeId == int.Parse(employeeId))
                 .SingleOrDefault();
 
             if (account == null) return NotFound();
 
-            account.refreshToken = null;
-            account.refreshTokenExpiry = null;
+            account.RefreshToken = null;
+            account.RefreshTokenExpiry = null;
             _accountRepository.SaveChanges();
 
             return Ok("Logged out successfully");
@@ -110,12 +110,12 @@ namespace back_end.Controllers
                 return BadRequest("Invalid Account Data Provided.");
             }
 
-            if (!_employeeRepository.GetByFilter(x => x.employeeId == accountDTO.userId).Any())
+            if (!_employeeRepository.GetByFilter(x => x.Id == accountDTO.userId).Any())
             {
                 return BadRequest("Employee Data Is Not Found.");
             }
 
-            if (_accountRepository.GetByFilter(x => x.employeeId == accountDTO.userId).Any())
+            if (_accountRepository.GetByFilter(x => x.EmployeeId == accountDTO.userId).Any())
             {
                 return BadRequest("Employee Already Has An Account.");
             }

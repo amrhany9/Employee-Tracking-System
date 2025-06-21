@@ -2,10 +2,11 @@
 {
     public class Role
     {
-        public int roleId { get; set; }
-        public string roleNameEn { get; set; }
-        public string roleNameAr { get; set; }
+        public int Id { get; set; }
+        public string NameEn { get; set; }
+        public string NameAr { get; set; }
 
-        public ICollection<Account> accounts { get; set; }
+        public ICollection<Account> Accounts { get; set; }
+        public ICollection<RolePermission> Permissions { get; set; }
     }
 }

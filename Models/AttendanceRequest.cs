@@ -6,15 +6,15 @@ namespace back_end.Models
 {
     public class AttendanceRequest
     {
-        public int requestId { get; set; }
-        public int employeeId { get; set; }
-        public CheckType checkType { get; set; }
-        public DateTime checkDate { get; set; }
-        public Decimal latitude { get; set; }
-        public Decimal longitude { get; set; }
-        public string description { get; set; }
-        public RequestStatus status { get; set; }
+        public int Id { get; set; }
+        public int EmployeeId { get; set; }
+        public CheckType CheckType { get; set; }
+        public DateTime CheckDate { get; set; }
+        public Decimal Latitude { get; set; }
+        public Decimal Longitude { get; set; }
+        public string Description { get; set; }
+        public RequestStatus Status { get; set; }
 
-        public Employee employee { get; set; }
+        public Employee Employee { get; set; }
     } 
 }

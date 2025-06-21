@@ -30,16 +30,16 @@ namespace back_end.Controllers
         [HttpGet("{roleId}")]
         public ActionResult GetRoleById(int roleId)
         {
-            var role = _roleRepository.GetByFilter(x => x.roleId == roleId).FirstOrDefault();
+            var role = _roleRepository.GetByFilter(x => x.Id == roleId).FirstOrDefault();
             return Ok(role);
         }
 
         [HttpGet("Account/{accountId}")]
         public ActionResult GetRoleByAccountId(int accountId)
         {
-            var role = _accountRepository.GetByFilter(x => x.accountId == accountId)
-                .Include(x => x.role)
-                .Select(x => x.role)
+            var role = _accountRepository.GetByFilter(x => x.Id == accountId)
+                .Include(x => x.Role)
+                .Select(x => x.Role)
                 .FirstOrDefault();
 
             return Ok(role);

@@ -2,12 +2,12 @@
 {
     public class CompanySetup
     {
-        public int companyId { get; set; }
-        public string companyNameEn { get; set; }
-        public string? companyNameAr { get; set; }
-        public int chairmanId { get; set; }
-        public decimal companyLatitude { get; set; }
-        public decimal companyLongitude { get; set; }
+        public int Id { get; set; }
+        public string NameEn { get; set; }
+        public string? NameAr { get; set; }
+        public int ChairmanId { get; set; }
+        public decimal Latitude { get; set; }
+        public decimal Longitude { get; set; }
 
         public Employee chairman { get; set; }
     }

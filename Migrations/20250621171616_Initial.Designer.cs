@@ -12,8 +12,8 @@ using back_end.Data;
 namespace back_end.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250209152314_RefreshToken")]
-    partial class RefreshToken
+    [Migration("20250621171616_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,158 +27,158 @@ namespace back_end.Migrations
 
             modelBuilder.Entity("back_end.Models.Account", b =>
                 {
-                    b.Property<int>("accountId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("accountId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("employeeId")
+                    b.Property<int>("EmployeeId")
                         .HasColumnType("int");
 
-                    b.Property<string>("password")
+                    b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("refreshToken")
+                    b.Property<string>("RefreshToken")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("refreshTokenExpiry")
+                    b.Property<DateTime?>("RefreshTokenExpiry")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("roleId")
+                    b.Property<int>("RoleId")
                         .HasColumnType("int");
 
-                    b.Property<string>("username")
+                    b.Property<string>("Username")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("accountId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("employeeId")
+                    b.HasIndex("EmployeeId")
                         .IsUnique();
 
-                    b.HasIndex("roleId");
+                    b.HasIndex("RoleId");
 
                     b.ToTable("Accounts");
                 });
 
             modelBuilder.Entity("back_end.Models.Attendance", b =>
                 {
-                    b.Property<int>("attendanceId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("attendanceId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("checkDate")
+                    b.Property<DateTime>("CheckDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("checkType")
+                    b.Property<int>("CheckType")
                         .HasColumnType("int");
 
-                    b.Property<int>("employeeId")
+                    b.Property<int>("EmployeeId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("latitude")
+                    b.Property<decimal>("Latitude")
                         .HasPrecision(9, 6)
                         .HasColumnType("decimal(9,6)");
 
-                    b.Property<decimal>("longitude")
+                    b.Property<decimal>("Longitude")
                         .HasPrecision(9, 6)
                         .HasColumnType("decimal(9,6)");
 
-                    b.Property<int>("machineCode")
+                    b.Property<int>("MachineCode")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValue(0);
 
-                    b.Property<int>("verifyMode")
+                    b.Property<int>("VerifyMode")
                         .HasColumnType("int");
 
-                    b.HasKey("attendanceId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("employeeId");
+                    b.HasIndex("EmployeeId");
 
-                    b.HasIndex("machineCode");
+                    b.HasIndex("MachineCode");
 
                     b.ToTable("Attendances");
                 });
 
             modelBuilder.Entity("back_end.Models.AttendanceRequest", b =>
                 {
-                    b.Property<int>("requestId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("requestId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("checkDate")
+                    b.Property<DateTime>("CheckDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("checkType")
+                    b.Property<int>("CheckType")
                         .HasColumnType("int");
 
-                    b.Property<string>("description")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.Property<int>("employeeId")
+                    b.Property<int>("EmployeeId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("latitude")
+                    b.Property<decimal>("Latitude")
                         .HasPrecision(9, 6)
                         .HasColumnType("decimal(9,6)");
 
-                    b.Property<decimal>("longitude")
+                    b.Property<decimal>("Longitude")
                         .HasPrecision(9, 6)
                         .HasColumnType("decimal(9,6)");
 
-                    b.Property<int>("status")
+                    b.Property<int>("Status")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValue(1);
 
-                    b.HasKey("requestId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("employeeId");
+                    b.HasIndex("EmployeeId");
 
                     b.ToTable("AttendanceRequests");
                 });
 
             modelBuilder.Entity("back_end.Models.CompanySetup", b =>
                 {
-                    b.Property<int>("companyId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("companyId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("chairmanId")
+                    b.Property<int>("ChairmanId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("companyLatitude")
+                    b.Property<decimal>("Latitude")
                         .HasPrecision(9, 6)
                         .HasColumnType("decimal(9,6)");
 
-                    b.Property<decimal>("companyLongitude")
+                    b.Property<decimal>("Longitude")
                         .HasPrecision(9, 6)
                         .HasColumnType("decimal(9,6)");
 
-                    b.Property<string>("companyNameAr")
+                    b.Property<string>("NameAr")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("companyNameEn")
+                    b.Property<string>("NameEn")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("companyId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("chairmanId")
+                    b.HasIndex("ChairmanId")
                         .IsUnique();
 
                     b.ToTable("CompanySetup");
@@ -186,180 +186,220 @@ namespace back_end.Migrations
 
             modelBuilder.Entity("back_end.Models.Department", b =>
                 {
-                    b.Property<int>("departmentId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("departmentId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("departmentNameAr")
+                    b.Property<string>("NameAr")
                         .HasMaxLength(50)
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(50)")
                         .UseCollation("Arabic_CI_AS");
 
-                    b.Property<string>("departmentNameEn")
+                    b.Property<string>("NameEn")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("departmentId");
+                    b.HasKey("Id");
 
                     b.ToTable("Departments");
                 });
 
             modelBuilder.Entity("back_end.Models.Employee", b =>
                 {
-                    b.Property<int>("employeeId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("employeeId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("departmentId")
+                    b.Property<int>("DepartmentId")
                         .HasColumnType("int");
 
-                    b.Property<string>("email")
+                    b.Property<string>("Email")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("fullNameAr")
+                    b.Property<string>("FullNameAr")
                         .HasMaxLength(50)
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(50)")
                         .UseCollation("Arabic_CI_AS");
 
-                    b.Property<string>("fullNameEn")
+                    b.Property<string>("FullNameEn")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<bool>("isActive")
+                    b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(true);
 
-                    b.Property<bool>("isCheckedIn")
+                    b.Property<bool>("IsCheckedIn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
-                    b.Property<string>("phone")
+                    b.Property<string>("Phone")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<string>("userPhotoPath")
+                    b.Property<string>("UserPhotoPath")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.HasKey("employeeId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("departmentId");
+                    b.HasIndex("DepartmentId");
 
                     b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("back_end.Models.Machine", b =>
                 {
-                    b.Property<int>("machineCode")
+                    b.Property<int>("Code")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("machineCode"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Code"));
 
-                    b.Property<string>("machineIp")
+                    b.Property<string>("Ip")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("machineName")
+                    b.Property<string>("Name")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("machinePort")
+                    b.Property<int>("Port")
                         .HasColumnType("int");
 
-                    b.HasKey("machineCode");
+                    b.HasKey("Code");
 
                     b.ToTable("Machines");
                 });
 
-            modelBuilder.Entity("back_end.Models.Role", b =>
+            modelBuilder.Entity("back_end.Models.Permission", b =>
                 {
-                    b.Property<int>("roleId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("roleId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("roleNameAr")
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Permissions");
+                });
+
+            modelBuilder.Entity("back_end.Models.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("NameAr")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("roleNameEn")
+                    b.Property<string>("NameEn")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("roleId");
+                    b.HasKey("Id");
 
                     b.ToTable("Roles");
                 });
 
+            modelBuilder.Entity("back_end.Models.RolePermission", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("PermissionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PermissionId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("RolePermissions");
+                });
+
             modelBuilder.Entity("back_end.Models.Account", b =>
                 {
-                    b.HasOne("back_end.Models.Employee", "employee")
-                        .WithOne("account")
-                        .HasForeignKey("back_end.Models.Account", "employeeId")
+                    b.HasOne("back_end.Models.Employee", "Employee")
+                        .WithOne("Account")
+                        .HasForeignKey("back_end.Models.Account", "EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("back_end.Models.Role", "role")
-                        .WithMany("accounts")
-                        .HasForeignKey("roleId")
+                    b.HasOne("back_end.Models.Role", "Role")
+                        .WithMany("Accounts")
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("employee");
+                    b.Navigation("Employee");
 
-                    b.Navigation("role");
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("back_end.Models.Attendance", b =>
                 {
-                    b.HasOne("back_end.Models.Employee", "employee")
-                        .WithMany("attendances")
-                        .HasForeignKey("employeeId")
+                    b.HasOne("back_end.Models.Employee", "Employee")
+                        .WithMany("Attendances")
+                        .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("back_end.Models.Machine", "machine")
-                        .WithMany("attendances")
-                        .HasForeignKey("machineCode")
+                    b.HasOne("back_end.Models.Machine", "Machine")
+                        .WithMany("Attendances")
+                        .HasForeignKey("MachineCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("employee");
+                    b.Navigation("Employee");
 
-                    b.Navigation("machine");
+                    b.Navigation("Machine");
                 });
 
             modelBuilder.Entity("back_end.Models.AttendanceRequest", b =>
                 {
-                    b.HasOne("back_end.Models.Employee", "employee")
-                        .WithMany("attendanceRequests")
-                        .HasForeignKey("employeeId")
+                    b.HasOne("back_end.Models.Employee", "Employee")
+                        .WithMany("AttendanceRequests")
+                        .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("employee");
+                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("back_end.Models.CompanySetup", b =>
                 {
                     b.HasOne("back_end.Models.Employee", "chairman")
                         .WithOne()
-                        .HasForeignKey("back_end.Models.CompanySetup", "chairmanId")
+                        .HasForeignKey("back_end.Models.CompanySetup", "ChairmanId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -368,37 +408,63 @@ namespace back_end.Migrations
 
             modelBuilder.Entity("back_end.Models.Employee", b =>
                 {
-                    b.HasOne("back_end.Models.Department", "department")
-                        .WithMany("employees")
-                        .HasForeignKey("departmentId")
+                    b.HasOne("back_end.Models.Department", "Department")
+                        .WithMany("Employees")
+                        .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("department");
+                    b.Navigation("Department");
+                });
+
+            modelBuilder.Entity("back_end.Models.RolePermission", b =>
+                {
+                    b.HasOne("back_end.Models.Permission", "Permission")
+                        .WithMany("Roles")
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("back_end.Models.Role", "Role")
+                        .WithMany("Permissions")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Permission");
+
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("back_end.Models.Department", b =>
                 {
-                    b.Navigation("employees");
+                    b.Navigation("Employees");
                 });
 
             modelBuilder.Entity("back_end.Models.Employee", b =>
                 {
-                    b.Navigation("account");
+                    b.Navigation("Account");
 
-                    b.Navigation("attendanceRequests");
+                    b.Navigation("AttendanceRequests");
 
-                    b.Navigation("attendances");
+                    b.Navigation("Attendances");
                 });
 
             modelBuilder.Entity("back_end.Models.Machine", b =>
                 {
-                    b.Navigation("attendances");
+                    b.Navigation("Attendances");
+                });
+
+            modelBuilder.Entity("back_end.Models.Permission", b =>
+                {
+                    b.Navigation("Roles");
                 });
 
             modelBuilder.Entity("back_end.Models.Role", b =>
                 {
-                    b.Navigation("accounts");
+                    b.Navigation("Accounts");
+
+                    b.Navigation("Permissions");
                 });
 #pragma warning restore 612, 618
         }
