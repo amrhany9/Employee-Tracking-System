@@ -19,7 +19,11 @@ namespace back_end.Data
             new AttendanceRequestConfiguration().Configure(modelBuilder.Entity<AttendanceRequest>());
             new MachineConfiguration().Configure(modelBuilder.Entity<Machine>());
             new RoleConfiguration().Configure(modelBuilder.Entity<Role>());
+            new RolePermissionConfiguration().Configure(modelBuilder.Entity<RolePermission>());
+            new PermissionConfiguration().Configure(modelBuilder.Entity<Permission>());
             new CompanySetupConfiguration().Configure(modelBuilder.Entity<CompanySetup>());
+
+            //modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
 
         public DbSet<Employee> Employees { get; set; }
@@ -29,6 +33,8 @@ namespace back_end.Data
         public DbSet<AttendanceRequest> AttendanceRequests { get; set; }
         public DbSet<Machine> Machines { get; set; }
         public DbSet<Role> Roles { get; set; }
+        public DbSet<RolePermission> RolePermissions { get; set; }
+        public DbSet<Permission> Permissions { get; set; }
         public DbSet<CompanySetup> CompanySetup { get; set; }
     }
 }

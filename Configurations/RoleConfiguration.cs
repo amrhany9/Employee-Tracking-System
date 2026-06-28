@@ -8,14 +8,18 @@ namespace back_end.Configurations
     {
         public void Configure(EntityTypeBuilder<Role> builder)
         {
-            builder.HasKey(x => x.roleId);
+            builder.HasKey(x => x.Id);
 
-            builder.Property(x => x.roleNameEn)
+            builder.Property(x => x.NameEn)
                 .IsRequired()
                 .HasMaxLength(50);
 
-            builder.Property(x => x.roleNameAr)
+            builder.Property(x => x.NameAr)
                 .HasMaxLength(50);
+
+            builder.HasMany(x => x.Permissions)
+                .WithOne(x => x.Role)
+                .HasForeignKey(x => x.RoleId);
         }
     }
 }

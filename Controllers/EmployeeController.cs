@@ -28,7 +28,7 @@ namespace back_end.Controllers
         {
             var employeeId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            var employee = _employeeRepository.GetByFilter(x => x.employeeId == int.Parse(employeeId)).FirstOrDefault();
+            var employee = _employeeRepository.GetByFilter(x => x.Id == int.Parse(employeeId)).FirstOrDefault();
 
             if (employee == null)
             {
@@ -41,7 +41,7 @@ namespace back_end.Controllers
         [HttpGet("{employeeId}")]
         public ActionResult<Employee> GetEmployeeById(int employeeId)
         {
-            var employee = _employeeRepository.GetByFilter(x => x.employeeId == employeeId).FirstOrDefault();
+            var employee = _employeeRepository.GetByFilter(x => x.Id == employeeId).FirstOrDefault();
 
             if (employee == null)
             {

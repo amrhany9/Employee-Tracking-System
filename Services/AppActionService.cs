@@ -25,7 +25,7 @@ namespace back_end.Services
 
             machinesMediator.ConnectToAllMachines();
 
-            var companySetup = companySetupRepository.GetByFilter(x => x.companyId == 1).FirstOrDefault();
+            var companySetup = companySetupRepository.GetByFilter(x => x.Id == 1).FirstOrDefault();
             locationService.setCompanyCoordinates(companySetup);
 
             return Task.CompletedTask;

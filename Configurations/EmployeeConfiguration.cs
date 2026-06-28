@@ -9,35 +9,35 @@ namespace back_end.Configurations
         public void Configure(EntityTypeBuilder<Employee> builder)
         {
             builder
-                .HasKey(x => x.employeeId);
+                .HasKey(x => x.Id);
 
-            builder.Property(x => x.fullNameEn)
+            builder.Property(x => x.FullNameEn)
                 .IsRequired()
                 .HasMaxLength(50);
 
-            builder.Property(x => x.fullNameAr)
+            builder.Property(x => x.FullNameAr)
                 .IsUnicode(true)
                 .UseCollation("Arabic_CI_AS")
                 .HasMaxLength(50);
 
             builder
-                .HasOne(e => e.department)
-                .WithMany(d => d.employees)
-                .HasForeignKey(e => e.departmentId);
+                .HasOne(e => e.Department)
+                .WithMany(d => d.Employees)
+                .HasForeignKey(e => e.DepartmentId);
 
-            builder.Property(x => x.email)
+            builder.Property(x => x.Email)
                 .HasMaxLength(50);
 
-            builder.Property(x => x.phone)
+            builder.Property(x => x.Phone)
                 .HasMaxLength(20);
 
-            builder.Property(x => x.userPhotoPath)
+            builder.Property(x => x.UserPhotoPath)
                 .HasMaxLength(255);
 
-            builder.Property(x => x.isCheckedIn)
+            builder.Property(x => x.IsCheckedIn)
                   .HasDefaultValue(false);
 
-            builder.Property(x => x.isActive)
+            builder.Property(x => x.IsActive)
                   .HasDefaultValue(true);
         }
     }

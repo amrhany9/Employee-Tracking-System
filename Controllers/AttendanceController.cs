@@ -95,26 +95,26 @@ namespace back_end.Controllers
                 return Unauthorized("Employee ID could not be found.");
             }
 
-            var employee = _employeeRepository.GetByFilter(x => x.employeeId == int.Parse(employeeId)).FirstOrDefault();
+            var employee = _employeeRepository.GetByFilter(x => x.Id == int.Parse(employeeId)).FirstOrDefault();
 
-            if (!employee.isCheckedIn)
+            if (!employee.IsCheckedIn)
             {
                 return BadRequest("Account is not checked in");
             }
 
             var userAttendance = new Attendance
             {
-                machineCode = 0,
-                employeeId = int.Parse(employeeId),
-                verifyMode = VerifyMode.Website,
-                checkType = CheckType.CheckOut,
-                checkDate = DateTime.Now,
-                latitude = (decimal)locationDTO.Latitude,
-                longitude = (decimal)locationDTO.Longitude
+                MachineCode = 0,
+                EmployeeId = int.Parse(employeeId),
+                VerifyMode = VerifyMode.Website,
+                CheckType = CheckType.CheckOut,
+                CheckDate = DateTime.Now,
+                Latitude = (decimal)locationDTO.Latitude,
+                Longitude = (decimal)locationDTO.Longitude
             };
 
             _attendanceService.AddAttendance(userAttendance);
-            employee.isCheckedIn = false;
+            employee.IsCheckedIn = false;
             _employeeRepository.Update(employee);
             _employeeRepository.SaveChanges();
             _attendanceService.SaveChanges();

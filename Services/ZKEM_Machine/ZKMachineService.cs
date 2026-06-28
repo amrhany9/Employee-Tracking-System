@@ -49,7 +49,7 @@ namespace back_end.Services.ZKEM_Machine
 
         private void Connect()
         {
-            _isConnected = _zkemKeeper.Connect_Net(currentMachine.machineIp, currentMachine.machinePort);
+            _isConnected = _zkemKeeper.Connect_Net(currentMachine.Ip, currentMachine.Port);
 
             RegisterEvents();
         }
@@ -112,13 +112,13 @@ namespace back_end.Services.ZKEM_Machine
 
             Models.Attendance attendance = new Models.Attendance
             {
-                machineCode = currentMachine.machineCode,
-                employeeId = EnrollNumber,
-                verifyMode = (VerifyMode)VerifyMethod,
-                checkType = (CheckType)AttState,
-                checkDate = checkDate,
-                latitude = 0,
-                longitude = 0
+                MachineCode = currentMachine.Code,
+                EmployeeId = EnrollNumber,
+                VerifyMode = (VerifyMode)VerifyMethod,
+                CheckType = (CheckType)AttState,
+                CheckDate = checkDate,
+                Latitude = 0,
+                Longitude = 0
             };
 
             using(var scope = _serviceScopeFactory.CreateScope())
@@ -126,19 +126,19 @@ namespace back_end.Services.ZKEM_Machine
                 var attendanceService = scope.ServiceProvider.GetRequiredService<IAttendanceService>();
                 var userRepository = scope.ServiceProvider.GetRequiredService<IRepository<Employee>>();
                     
-                var user = userRepository.GetByFilter(x => x.employeeId == attendance.employeeId).FirstOrDefault();
+                var user = userRepository.GetByFilter(x => x.Id == attendance.EmployeeId).FirstOrDefault();
 
                 if (user != null)
                 {
-                    switch (attendance.checkType)
+                    switch (attendance.CheckType)
                     {
                         case CheckType.CheckIn:
-                            user.isCheckedIn = true;
+                            user.IsCheckedIn = true;
                             userRepository.Update(user);
                             break;
 
                         case CheckType.CheckOut:
-                            user.isCheckedIn = false;
+                            user.IsCheckedIn = false;
                             userRepository.Update(user);    
                             break;
                     }
@@ -183,13 +183,13 @@ namespace back_end.Services.ZKEM_Machine
                     {
                         Models.Attendance userAttendance = new Models.Attendance
                         {
-                            employeeId = enrollNumber,
-                            verifyMode = (VerifyMode)verifyMode,
-                            checkType = (CheckType)inOutMode,
-                            checkDate = new DateTime(yearValue, monthValue, day, hour, minute, 0),
+                            EmployeeId = enrollNumber,
+                            VerifyMode = (VerifyMode)verifyMode,
+                            CheckType = (CheckType)inOutMode,
+                            CheckDate = new DateTime(yearValue, monthValue, day, hour, minute, 0),
                         };
 
-                        if (!logs.Any(log => log.checkDate == userAttendance.checkDate))
+                        if (!logs.Any(log => log.CheckDate == userAttendance.CheckDate))
                         {
                             logs.Add(userAttendance);
                         }

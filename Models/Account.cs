@@ -6,15 +6,15 @@ namespace back_end.Models
 {
     public class Account
     {
-        public int accountId { get; set; }
-        public int employeeId { get; set; }
-        public string username { get; set; }
-        public string password { get; set; }
-        public string? refreshToken { get; set; }
-        public DateTime? refreshTokenExpiry { get; set; }
-        public int roleId { get; set; }
+        public int Id { get; set; }
+        public int EmployeeId { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public string? RefreshToken { get; set; }
+        public DateTime? RefreshTokenExpiry { get; set; }
+        public int RoleId { get; set; }
 
-        public Role role { get; set; }
-        public Employee employee { get; set; }
+        public Role Role { get; set; }
+        public Employee Employee { get; set; }
     }
 }

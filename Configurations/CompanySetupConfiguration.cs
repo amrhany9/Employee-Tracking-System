@@ -9,24 +9,24 @@ namespace back_end.Configurations
         public void Configure(EntityTypeBuilder<CompanySetup> builder)
         {
             builder
-                .HasKey(cs => cs.companyId);
+                .HasKey(cs => cs.Id);
 
-            builder.Property(cs => cs.companyNameEn)
+            builder.Property(cs => cs.NameEn)
                 .HasMaxLength(50);
 
-            builder.Property(cs => cs.companyNameAr)
+            builder.Property(cs => cs.NameAr)
                 .HasMaxLength(50);
 
-            builder.Property(cs => cs.companyLatitude)
+            builder.Property(cs => cs.Latitude)
                 .HasPrecision(9, 6);
 
-            builder.Property(cs => cs.companyLongitude)
+            builder.Property(cs => cs.Longitude)
                 .HasPrecision(9, 6);
 
             builder
                .HasOne(cs => cs.chairman)
                .WithOne()
-               .HasForeignKey<CompanySetup>(cs => cs.chairmanId);
+               .HasForeignKey<CompanySetup>(cs => cs.ChairmanId);
         }
     }
 }

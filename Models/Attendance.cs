@@ -6,16 +6,16 @@ namespace back_end.Models
 {
     public class Attendance
     {
-        public int attendanceId { get; set; }
-        public int machineCode { get; set; }
-        public int employeeId { get; set; }
-        public VerifyMode verifyMode { get; set; }
-        public CheckType checkType { get; set; }
-        public DateTime checkDate { get; set; }
-        public Decimal latitude { get; set; }
-        public Decimal longitude { get; set; }
+        public int Id { get; set; }
+        public int MachineCode { get; set; }
+        public int EmployeeId { get; set; }
+        public VerifyMode VerifyMode { get; set; }
+        public CheckType CheckType { get; set; }
+        public DateTime CheckDate { get; set; }
+        public decimal Latitude { get; set; }
+        public decimal Longitude { get; set; }
 
-        public Machine machine { get; set; }
-        public Employee employee { get; set; }
+        public Machine Machine { get; set; }
+        public Employee Employee { get; set; }
     } 
 }

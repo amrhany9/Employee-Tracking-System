@@ -32,7 +32,7 @@ namespace back_end.Mediators.Machines
         {
             using var scope = _serviceProvider.CreateScope();
             var machineRepository = scope.ServiceProvider.GetRequiredService<IRepository<Machine>>();
-            return machineRepository.GetByFilter(x => x.machineCode == machineCode).FirstOrDefault();
+            return machineRepository.GetByFilter(x => x.Code == machineCode).FirstOrDefault();
         }
 
         public Machine CreateMachine(MachineViewModel machineViewModel)
@@ -51,7 +51,7 @@ namespace back_end.Mediators.Machines
             using var scope = _serviceProvider.CreateScope();
             var machineRepository = scope.ServiceProvider.GetRequiredService<IRepository<Machine>>();
 
-            var machine = machineRepository.GetByFilter(x => x.machineCode == machineCode).FirstOrDefault();
+            var machine = machineRepository.GetByFilter(x => x.Code == machineCode).FirstOrDefault();
             if (machine == null)
             {
                 return false;
@@ -122,7 +122,7 @@ namespace back_end.Mediators.Machines
 
         private IZKMachineService GetOrCreateMachineService(Machine machine)
         {
-            return _zkMachineServices.GetOrAdd(machine.machineCode, machineCode =>
+            return _zkMachineServices.GetOrAdd(machine.Code, machineCode =>
             {
                 using var scope = _serviceProvider.CreateScope();
                 return scope.ServiceProvider.GetRequiredService<IZKMachineService>();

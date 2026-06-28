@@ -9,31 +9,31 @@ namespace back_end.Configurations
     {
         public void Configure(EntityTypeBuilder<AttendanceRequest> builder)
         {
-            builder.HasKey(a => a.requestId);
+            builder.HasKey(a => a.Id);
 
-            builder.Property(a => a.checkType)
+            builder.Property(a => a.CheckType)
                 .IsRequired();
 
-            builder.Property(a => a.checkDate)
+            builder.Property(a => a.CheckDate)
                 .IsRequired();
 
-            builder.Property(a => a.latitude)
+            builder.Property(a => a.Latitude)
                 .HasPrecision(9, 6);
 
-            builder.Property(a => a.longitude)
+            builder.Property(a => a.Longitude)
                 .HasPrecision(9, 6);
 
-            builder.Property(a => a.description)
+            builder.Property(a => a.Description)
                 .IsRequired()
                 .HasMaxLength(150);
 
-            builder.Property(a => a.status)
+            builder.Property(a => a.Status)
                 .HasDefaultValue(RequestStatus.Pending)
                 .IsRequired();
 
-            builder.HasOne(a => a.employee)
-                .WithMany(a => a.attendanceRequests)
-                .HasForeignKey(a => a.employeeId);
+            builder.HasOne(a => a.Employee)
+                .WithMany(a => a.AttendanceRequests)
+                .HasForeignKey(a => a.EmployeeId);
         }
     }
 }
