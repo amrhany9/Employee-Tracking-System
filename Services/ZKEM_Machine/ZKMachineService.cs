@@ -82,9 +82,9 @@ namespace back_end.Services.ZKEM_Machine
                 zkTimer1.Enabled = false; 
                 if (_isConnected)
                 {
-                    if (_zkemKeeper.ReadRTLog(1))
+                    if (_zkemKeeper.ReadRTLog(currentMachine.machineCode))
                     {
-                        while (_isConnected && _zkemKeeper.GetRTLog(1))
+                        while (_isConnected && _zkemKeeper.GetRTLog(currentMachine.machineCode))
                         {
                             ;
                         }

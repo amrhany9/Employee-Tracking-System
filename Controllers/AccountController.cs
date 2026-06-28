@@ -51,6 +51,7 @@ namespace back_end.Controllers
                 account.refreshToken = refreshToken;
                 account.refreshTokenExpiry = DateTime.UtcNow.AddDays(7);
 
+                _accountRepository.Update(account);
                 _accountRepository.SaveChanges();
 
                 return Ok(new { accessToken = accessToken, refreshToken = refreshToken});
